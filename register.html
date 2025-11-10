@@ -9,17 +9,22 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     />
-
     <style>
       /* CSS nội tuyến để đơn giản hóa, bạn có thể chuyển sang styles.css sau */
+      :root {
+        --primary-color: #007bff; /* Màu xanh của iTOUR */
+        --secondary-color: #ff6600; /* Màu cam cho nút */
+      }
       .register-body {
         background-color: #f4f7f6;
+        min-height: 100vh;
+        margin: 0;
+      }
+      .main-content {
+        padding-top: 50px; /* Để tránh dính vào header */
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 100vh;
-        margin: 0;
-        padding-top: 50px; /* Để tránh dính vào header */
       }
       .register-container {
         background-color: #ffffff;
@@ -28,6 +33,7 @@
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         width: 100%;
         max-width: 400px;
+        margin: 50px auto; /* Căn giữa */
       }
       .register-title {
         text-align: center;
@@ -80,59 +86,68 @@
     </style>
   </head>
   <body class="register-body">
-    <div class="register-container">
-      <h2 class="register-title">Đăng Ký Tài Khoản iTOUR</h2>
-      <form action="#" method="POST" class="register-form">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Nhập email của bạn"
-            required
-          />
-        </div>
+    <div data-include="header.html"></div>
 
-        <div class="form-group">
-          <label for="fullname">Họ và Tên</label>
-          <input
-            type="text"
-            id="fullname"
-            name="fullname"
-            placeholder="Nhập họ và tên"
-            required
-          />
-        </div>
+    <main class="main-content">
+      <div class="register-container">
+        <h2 class="register-title">Đăng Ký Tài Khoản iTOUR</h2>
 
-        <div class="form-group">
-          <label for="password">Mật khẩu</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="Tối thiểu 6 ký tự"
-            required
-          />
-        </div>
+        <form id="register-form" class="auth-form">
+          <div class="form-group">
+            <label for="full_name">Họ và Tên</label>
+            <input
+              type="text"
+              id="full_name"
+              name="full_name"
+              placeholder="Nhập họ và tên"
+              required
+            />
+          </div>
 
-        <div class="form-group">
-          <label for="confirm-password">Xác nhận Mật khẩu</label>
-          <input
-            type="password"
-            id="confirm-password"
-            name="confirm-password"
-            placeholder="Nhập lại mật khẩu"
-            required
-          />
-        </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Nhập email của bạn"
+              required
+            />
+          </div>
 
-        <button type="submit" class="register-btn">Tạo Tài Khoản</button>
-      </form>
+          <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Tối thiểu 6 ký tự"
+              required
+            />
+          </div>
 
-      <p class="login-link">
-        Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
-      </p>
-    </div>
+          <div class="form-group">
+            <label for="confirm_password">Xác nhận Mật khẩu</label>
+            <input
+              type="password"
+              id="confirm_password"
+              name="confirm_password"
+              placeholder="Nhập lại mật khẩu"
+              required
+            />
+          </div>
+
+          <button type="submit" class="register-btn">Tạo Tài Khoản</button>
+
+          <p class="login-link">
+            Đã có tài khoản? <a href="login.html">Đăng nhập ngay</a>
+          </p>
+        </form>
+      </div>
+    </main>
+
+    <div data-include="footer.html"></div>
+
+    <script src="script.js"></script>
   </body>
 </html>

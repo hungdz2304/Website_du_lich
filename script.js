@@ -111,3 +111,65 @@ function includeHTML() {
 
 // Gọi hàm ngay khi script được tải
 includeHTML();
+// --- LOGIC XỬ LÝ FORM ĐĂNG KÝ (register.html) ---
+
+// Chờ cho toàn bộ DOM (cấu trúc HTML) được tải xong
+document.addEventListener("DOMContentLoaded", () => {
+  // 1. Lấy Form Đăng ký bằng ID
+  const registerForm = document.getElementById("register-form");
+
+  // Kiểm tra xem chúng ta có đang ở trang Đăng ký không
+  if (registerForm) {
+    // 2. Bắt sự kiện khi người dùng bấm nút Đăng ký
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault(); // Ngăn chặn Form Submit mặc định (tải lại trang)
+
+      // Lấy dữ liệu từ các trường nhập liệu
+      const full_name = document.getElementById("full_name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const confirm_password =
+        document.getElementById("confirm_password").value;
+
+      // **Quan trọng:** Đảm bảo Backend của bạn đang chạy ở http://localhost:5000
+      const API_URL = "http://localhost:5000/api/register";
+
+      try {
+        // 3. Gửi yêu cầu POST đến API Backend
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", // Báo cho server biết đây là dữ liệu JSON
+          },
+          body: JSON.stringify({
+            // Chuyển dữ liệu JavaScript sang chuỗi JSON
+            full_name,
+            email,
+            password,
+            confirm_password, // Backend sẽ kiểm tra trường này
+          }),
+        });
+
+        // Chuyển phản hồi (Response) thành đối tượng JSON
+        const data = await response.json();
+
+        // 4. Xử lý Phản hồi từ Server
+        if (response.ok) {
+          // Đăng ký thành công (Server trả về Status 201)
+          alert("Đăng ký thành công! Bạn có thể Đăng nhập ngay bây giờ.");
+
+          // Chuyển hướng người dùng đến trang Đăng nhập
+          window.location.href = "login.html";
+        } else {
+          // Đăng ký thất bại (Lỗi Validation hoặc Email đã tồn tại)
+          // Hiển thị thông báo lỗi từ Backend
+          alert(`Đăng ký thất bại: ${data.msg || "Kiểm tra lại dữ liệu."}`);
+        }
+      } catch (error) {
+        // Xử lý lỗi kết nối mạng hoặc lỗi server nghiêm trọng
+        console.error("Lỗi kết nối:", error);
+        alert("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+      }
+    });
+  }
+});
