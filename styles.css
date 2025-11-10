@@ -438,3 +438,89 @@ body {
   display: flex;
   align-items: center;
 }
+/* ---- ĐỊNH DẠNG FOOTER (CHÂN TRANG) ---- */
+
+.main-footer {
+  background-color: #f4f7f6; /* Màu nền xám nhạt như mẫu */
+  color: #333;
+  padding-top: 30px;
+  font-size: 14px;
+}
+
+.footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-columns-container {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+}
+
+.footer-col {
+  flex-basis: 18%; /* Chia đều 5 cột */
+  padding-right: 15px;
+}
+
+.footer-col h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 15px;
+}
+
+.footer-col a {
+  display: block;
+  color: var(--primary-color); /* Màu xanh chính cho các liên kết */
+  text-decoration: none;
+  margin-bottom: 8px;
+  transition: color 0.2s;
+}
+
+.footer-col a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Khu vực quốc gia và bản quyền */
+.footer-bottom-info {
+  padding: 20px 0;
+  border-top: 1px solid #ddd; /* Dòng phân cách nếu cần */
+}
+
+.country-info {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.flag-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.footer-copyright {
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #ddd;
+  color: #666;
+  font-size: 12px;
+}
+
+.footer-copyright p {
+  margin: 5px 0;
+}
+
+/* Responsive cho màn hình nhỏ hơn */
+@media (max-width: 992px) {
+  .footer-columns-container {
+    flex-wrap: wrap; /* Cho phép các cột xuống hàng */
+  }
+  .footer-col {
+    flex-basis: 45%; /* Chia thành 2 cột trên di động */
+    margin-bottom: 20px;
+  }
+}

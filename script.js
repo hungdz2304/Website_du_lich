@@ -83,3 +83,31 @@ function handleHeroSearch(event) {
 if (heroSearchForm) {
   heroSearchForm.addEventListener("submit", handleHeroSearch);
 }
+// --- LOGIC TÁI SỬ DỤNG HEADER/FOOTER ---
+
+function includeHTML() {
+  const elements = document.querySelectorAll("[data-include]");
+  elements.forEach((el) => {
+    const file = el.getAttribute("data-include");
+    if (file) {
+      // Dùng Fetch API để lấy nội dung từ file
+      fetch(file)
+        .then((response) => {
+          if (response.ok) return response.text();
+          throw new Error("Không thể tải nội dung: " + file);
+        })
+        .then((html) => {
+          el.innerHTML = html; // Chèn nội dung HTML đã tải vào vị trí hiện tại
+          el.removeAttribute("data-include"); // Xóa thuộc tính để tránh lặp lại
+
+          // Sau khi footer được tải, có thể cần áp dụng một số CSS đặc biệt
+        })
+        .catch((error) => {
+          console.error("Lỗi khi tải file:", error);
+        });
+    }
+  });
+}
+
+// Gọi hàm ngay khi script được tải
+includeHTML();
