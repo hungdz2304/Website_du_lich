@@ -1,0 +1,440 @@
+/* Thiết lập cơ bản */
+:root {
+  --primary-color: #007bff; /* Màu xanh chính */
+  --secondary-color: #ff6600; /* Màu cam nổi bật/Ưu đãi */
+  --text-color: #333;
+  --light-gray: #f4f7f6;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  background-color: #fff;
+}
+
+/* PHẦN 1: HEADER & MENU */
+.main-header {
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--primary-color);
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  padding: 0 15px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.main-nav a:hover {
+  color: var(--secondary-color);
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-account {
+  text-decoration: none;
+  color: var(--text-color);
+  margin-right: 20px;
+  font-size: 14px;
+}
+
+.hotline {
+  text-decoration: none;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+.hotline i {
+  margin-right: 5px;
+}
+
+/* PHẦN 2: BANNER CHÍNH (HERO SECTION) */
+.hero-section {
+  position: relative;
+  height: 400px; /* Chiều cao banner */
+  background: url("placeholder_background.jpg") center/cover no-repeat; /* Thay bằng ảnh của bạn */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Bạn cần đặt tên file ảnh là placeholder_background.jpg hoặc thay tên file ảnh thật của bạn */
+/*  */
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Tăng độ tối nhẹ cho chữ nổi bật hơn */
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Box tìm kiếm và quảng cáo */
+.search-promo-box {
+  flex-basis: 60%;
+  margin-top: 40px;
+}
+
+.promo-text {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.badge {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 3px 8px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 10px;
+}
+
+.promo-subtext {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Định dạng thanh tìm kiếm trong banner */
+.hero-search-form {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.destination-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.search-group {
+  display: flex;
+  gap: 10px;
+}
+
+.search-group .search-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-btn {
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.search-btn:hover {
+  background-color: #cc5200;
+}
+
+/* Box tour nổi bật bên phải */
+.featured-tour-box {
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 40px;
+  flex-basis: 35%;
+  text-align: right;
+}
+
+.tour-label {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.tour-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.tour-price {
+  font-size: 14px;
+}
+
+.tour-price span {
+  font-size: 24px;
+  font-weight: 800;
+  color: #ffcc00; /* Màu vàng nổi bật cho giá */
+}
+
+/* PHẦN 3: DỊCH VỤ NỔI BẬT & ƯU ĐÃI */
+.info-strip {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 20px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.info-item {
+  flex-basis: 30%;
+}
+
+.info-item i {
+  font-size: 30px;
+  color: var(--primary-color);
+  margin-bottom: 10px;
+}
+
+.info-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.info-item strong {
+  font-size: 16px;
+  color: var(--text-color);
+  display: block;
+}
+
+.tour-list-section {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.section-title {
+  text-align: center;
+  color: var(--secondary-color);
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 30px;
+}
+
+/* Định dạng thẻ tour (cards) */
+.tour-cards-container {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.tour-card {
+  flex: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-width: 300px;
+}
+
+.discount-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 0 0 5px 0;
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Bạn cần thêm Media Queries cho thiết bị di động nếu muốn tối ưu hóa hoàn toàn! */
+@media (max-width: 992px) {
+  .tour-cards-container {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+@media (max-width: 768px) {
+  .hero-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .search-promo-box,
+  .featured-tour-box {
+    flex-basis: 100%;
+    text-align: center;
+  }
+  .featured-tour-box {
+    display: none; /* Ẩn bớt box quảng cáo trên mobile để ưu tiên tìm kiếm */
+  }
+  .search-group {
+    flex-direction: column;
+  }
+  .search-btn {
+    width: 100%;
+  }
+  .info-strip {
+    flex-direction: column;
+  }
+  .info-item {
+    margin-bottom: 15px;
+  }
+}
+/* Định dạng nội dung bên trong thẻ Tour Card */
+.tour-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.tour-card:hover {
+  transform: translateY(-5px); /* Hiệu ứng nhấc lên khi rê chuột */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  padding: 15px;
+}
+
+.tour-destination {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 5px;
+  height: 40px; /* Cố định chiều cao để các thẻ bằng nhau */
+  overflow: hidden;
+}
+
+.tour-price-old {
+  text-decoration: line-through; /* Gạch ngang giá cũ */
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.tour-price-new {
+  font-size: 24px;
+  color: var(--secondary-color); /* Màu cam nổi bật cho giá mới */
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.tour-price-new span.per-guest {
+  font-size: 14px;
+  font-weight: normal;
+  color: #555;
+}
+
+.tour-departure-info {
+  font-size: 13px;
+  color: #007bff; /* Màu xanh nổi bật cho thông tin khởi hành */
+  padding-top: 10px;
+  border-top: 1px dashed #eee;
+}
+
+.tour-departure-info strong {
+  font-weight: 700;
+}
+/* ---- CSS MỚI CHO NÚT ĐĂNG KÝ/ĐĂNG NHẬP ---- */
+
+.auth-buttons {
+  display: flex; /* Hiển thị các nút cạnh nhau */
+  gap: 8px; /* Khoảng cách giữa hai nút */
+  margin-right: 20px; /* Tạo khoảng cách với hotline */
+}
+
+.btn {
+  padding: 8px 15px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  display: inline-flex; /* Đảm bảo padding và border hoạt động tốt */
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-register {
+  background-color: transparent; /* Nền trong suốt */
+  color: var(--primary-color); /* Màu chữ xanh chính */
+  border: 1px solid var(--primary-color); /* Viền xanh */
+}
+
+.btn-register:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-login {
+  background-color: var(--primary-color); /* Nền xanh chính */
+  color: white;
+  border: 1px solid var(--primary-color); /* Viền xanh */
+}
+
+.btn-login:hover {
+  background-color: darken(
+    var(--primary-color),
+    10%
+  ); /* Làm tối màu nền khi hover */
+  /* Lưu ý: darken() chỉ dùng được với SASS/LESS, nếu dùng CSS thuần thì dùng màu cố định */
+  /* Hoặc có thể dùng màu cụ thể như #0056b3 */
+  background-color: #0056b3; /* Một màu xanh tối hơn */
+}
+
+/* Điều chỉnh lại hotline một chút nếu cần thiết */
+.hotline {
+  /* Đảm bảo hotline vẫn căn chỉnh tốt */
+  display: flex;
+  align-items: center;
+}
