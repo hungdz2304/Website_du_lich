@@ -1,0 +1,56 @@
+[
+    {
+        "name": "Ha Long Bay Classic",
+        "description": "Overnight cruise through limestone karsts, caves and floating villages.",
+        "price": 129.99,
+        "imageUrl": "https://img.hostelworldblog.com/blog/wp-content/uploads/2024/10/dreamstimesmall_310938107.jpg",
+        "departure": "Hanoi",
+        "spots": 20,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    },
+    {
+        "name": "Sapa Trek & Homestay",
+        "description": "Two-day trek through rice terraces with a local homestay experience.",
+        "price": 89.5,
+        "imageUrl": "https://resource.kinhtedothi.vn/resources2025/1/users/299/laocai1-1743590404.jpg",
+        "departure": "Lao Cai",
+        "spots": 12,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    },
+    {
+        "name": "Mekong Delta Day Trip",
+        "description": "Boat ride, local market visit and traditional music on the river.",
+        "price": 49.0,
+        "imageUrl": "https://image.vietnamnews.vn/uploadvnnews/Article/2024/12/18/394646_5036809985224443_image.png",
+        "departure": "Ho Chi Minh City",
+        "spots": 30,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    },
+    {
+        "name": "Phu Quoc Island Retreat",
+        "description": "Beach relaxation, snorkeling and island excursions.",
+        "price": 199.0,
+        "imageUrl": "https://ik.imagekit.io/tvlk/blog/2025/02/YxzFGZxQ-kinh-nghiem-du-lich-phu-quoc-6.jpg",
+        "departure": "Phu Quoc",
+        "spots": 25,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    },
+    {
+        "name": "Hue Imperial City Tour",
+        "description": "Guided tour of the imperial citadel, tombs and royal architecture.",
+        "price": 59.99,
+        "imageUrl": "https://cdn-media.sforum.vn/storage/app/media/ctvseo_MH/hu%E1%BA%BF%20mi%E1%BB%81n%20n%C3%A0o/hue-thuoc-mien-nao-thumbnail.jpg",
+        "departure": "Hue",
+        "spots": 15,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    },
+    {
+        "name": "haiz",
+        "description": "Platoon IV's angel",
+        "price": 805,
+        "imageUrl": "https://scontent.fsgn8-4.fna.fbcdn.net/v/t39.30808-6/518272026_1276915794036753_300975629328033224_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=TlH0YrMzrqwQ7kNvwF1ejmb&_nc_oc=AdnVYNmHcPwbcl5HYwy5RaEYAcgMcsnHQ2emGHQxkODcq_6-8kypcM7IhxxT3bjWqHo&_nc_zt=23&_nc_ht=scontent.fsgn8-4.fna&_nc_gid=eFb9Fvu2CUCVIlwZ_pWEug&oh=00_Afh3teodWdcFdzpWqvCNRhldWDZFR3aJTAnyt_0TvXIJeg&oe=691C4E1A",
+        "departure": "Ben Tre",
+        "spots": 1,
+        "createdAt": "2025-11-14T00:00:00.000Z"
+    }
+]
