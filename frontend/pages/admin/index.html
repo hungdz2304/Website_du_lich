@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Du Lịch VN</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-plane-departure"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html" class="active">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="tours.html">
+                    <i class="fas fa-map-marked-alt"></i> Quản lý Tours
+                </a>
+                <a href="bookings.html">
+                    <i class="fas fa-ticket-alt"></i> Quản lý Bookings
+                </a>
+                <a href="users.html">
+                    <i class="fas fa-users"></i> Quản lý Users
+                </a>
+                <a href="reviews.html">
+                    <i class="fas fa-star"></i> Quản lý Reviews
+                </a>
+                <a href="../index.html">
+                    <i class="fas fa-globe"></i> Về Website
+                </a>
+            </nav>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <strong id="adminName">Admin</strong>
+                    <small id="adminEmail">admin@toursite.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Dashboard</h1>
+                <button id="btnLogout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalBookings">0</h3>
+                        <p>Tổng Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Tổng Users</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalTours">0</h3>
+                        <p>Tổng Tours</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">0đ</h3>
+                        <p>Doanh Thu</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bookings -->
+            <section class="admin-section">
+                <h2>Bookings Gần Đây</h2>
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Mã Booking</th>
+                                <th>Khách Hàng</th>
+                                <th>Tour</th>
+                                <th>Tổng Tiền</th>
+                                <th>Trạng Thái</th>
+                                <th>Ngày Đặt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentBookings">
+                            <tr>
+                                <td colspan="6" class="text-center">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/admin/dashboard.js"></script>
+</body>
+</html>

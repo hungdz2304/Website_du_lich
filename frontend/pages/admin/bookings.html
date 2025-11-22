@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Bookings - Admin</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-plane-departure"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="tours.html">
+                    <i class="fas fa-map-marked-alt"></i> Quản lý Tours
+                </a>
+                <a href="bookings.html" class="active">
+                    <i class="fas fa-ticket-alt"></i> Quản lý Bookings
+                </a>
+                <a href="users.html">
+                    <i class="fas fa-users"></i> Quản lý Users
+                </a>
+                <a href="reviews.html">
+                    <i class="fas fa-star"></i> Quản lý Reviews
+                </a>
+                <a href="../index.html">
+                    <i class="fas fa-globe"></i> Về Website
+                </a>
+            </nav>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <strong id="adminName">Admin</strong>
+                    <small id="adminEmail">admin@toursite.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Quản lý Bookings</h1>
+                <button id="btnLogout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </header>
+
+            <div class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Mã Booking</th>
+                                <th>Khách Hàng</th>
+                                <th>Tour</th>
+                                <th>Ngày Khởi Hành</th>
+                                <th>Số Người</th>
+                                <th>Tổng Tiền</th>
+                                <th>Trạng Thái</th>
+                                <th>Thanh Toán</th>
+                                <th>Ngày Đặt</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTable">
+                            <tr>
+                                <td colspan="9" class="text-center">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        (function() {
+            const { apiRequest, formatPrice, formatDate, isLoggedIn, getUserData, logout } = window.TourBooking || {};
+
+        function checkAdminAccess() {
+            if (!isLoggedIn()) {
+                window.location.href = '../login.html';
+                return false;
+            }
+            const user = getUserData();
+            if (user.role !== 'admin') {
+                alert('Bạn không có quyền truy cập');
+                window.location.href = '../index.html';
+                return false;
+            }
+            document.getElementById('adminName').textContent = user.full_name || 'Admin';
+            document.getElementById('adminEmail').textContent = user.email;
+            return true;
+        }
+
+        async function loadBookings() {
+            try {
+                const res = await apiRequest('/admin/bookings?limit=50');
+                if (res.success) {
+                    renderBookings(res.data.bookings);
+                }
+            } catch (error) {
+                console.error('Load bookings error:', error);
+                document.getElementById('bookingsTable').innerHTML = '<tr><td colspan="9" class="text-center">Lỗi tải dữ liệu</td></tr>';
+            }
+        }
+
+        function renderBookings(bookings) {
+            const tbody = document.getElementById('bookingsTable');
+            if (bookings.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="text-center">Chưa có booking nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = bookings.map(booking => {
+                const departureDate = booking.departure_date ? formatDate(booking.departure_date) : '-';
+                const bookingDate = booking.booking_date ? formatDate(booking.booking_date) : '-';
+                return `
+                <tr>
+                    <td><strong>${booking.booking_reference}</strong></td>
+                    <td>
+                        ${booking.customer_name}<br>
+                        <small>${booking.customer_email}</small>
+                    </td>
+                    <td>${booking.tour_title}</td>
+                    <td>${departureDate}</td>
+                    <td>
+                        ${booking.num_adults}A
+                        ${booking.num_children > 0 ? `, ${booking.num_children}C` : ''}
+                        ${booking.num_infants > 0 ? `, ${booking.num_infants}I` : ''}
+                    </td>
+                    <td>${formatPrice(booking.final_price)}</td>
+                    <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                    <td><span class="status-badge status-${booking.payment_status}">${booking.payment_status}</span></td>
+                    <td>${bookingDate}</td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('btnLogout')?.addEventListener('click', () => {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) logout();
+        });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (checkAdminAccess()) loadBookings();
+            });
+        })();
+    </script>
+</body>
+</html>

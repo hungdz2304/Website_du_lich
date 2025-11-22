@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Du Lịch Việt Nam - Đặt Tour Giá Tốt</title>
+    <meta name="description" content="Đặt tour du lịch giá tốt, ưu đãi hấp dẫn. Khám phá Phú Quốc, Đà Lạt, Nha Trang, Hạ Long và nhiều điểm đến hấp dẫn khác.">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <i class="fas fa-plane-departure"></i>
+                        <span>DuLịchVN</span>
+                    </a>
+                </div>
+                
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html" class="active">Trang chủ</a></li>
+                        <li><a href="tour-list.html">Tours</a></li>
+                        <li><a href="#destinations">Điểm đến</a></li>
+                        <li><a href="#contact">Liên hệ</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <div class="auth-links" id="authLinks">
+                        <a href="login.html" class="btn-login">Đăng nhập</a>
+                        <a href="register.html" class="btn-register">Đăng ký</a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="btn-user" id="btnUserDropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName"></span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown" style="display: none;">
+                            <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
+                            <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Search -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <h1 class="hero-title">Khám Phá Việt Nam Cùng Chúng Tôi</h1>
+                <p class="hero-subtitle">Đặt tour du lịch giá tốt - Ưu đãi hấp dẫn - Dịch vụ tận tâm</p>
+                
+                <!-- Search Bar (iVivu style) -->
+                <div class="search-box">
+                    <div class="search-tabs">
+                        <button class="search-tab active">
+                            <i class="fas fa-map-marked-alt"></i>
+                            Tour trong nước
+                        </button>
+                    </div>
+                    
+                    <form class="search-form" id="searchForm">
+                        <div class="search-inputs">
+                            <div class="search-input-group">
+                                <i class="fas fa-search"></i>
+                                <input type="text" 
+                                       id="searchKeyword" 
+                                       placeholder="Bạn muốn đi đâu?" 
+                                       class="search-input">
+                            </div>
+                            
+                            <div class="search-input-group">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <select id="searchDestination" class="search-select">
+                                    <option value="">Tất cả điểm đến</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn-search">
+                                <i class="fas fa-search"></i>
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Tours Section -->
+    <section class="section featured-tours">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    Tour Nổi Bật
+                </h2>
+                <a href="tour-list.html" class="btn-view-all">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="loading" id="loadingFeatured">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+
+            <div class="tours-grid" id="featuredToursGrid">
+                <!-- Tours will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Destinations Section -->
+    <section class="section destinations" id="destinations">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Điểm Đến Hàng Đầu
+                </h2>
+            </div>
+
+            <div class="loading" id="loadingDestinations">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+
+            <div class="destinations-grid" id="destinationsGrid">
+                <!-- Destinations will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="section why-choose-us">
+        <div class="container">
+            <h2 class="section-title">Tại Sao Chọn Chúng Tôi?</h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <h3>Giá Tốt Nhất</h3>
+                    <p>Cam kết giá tour cạnh tranh nhất thị trường với nhiều ưu đãi hấp dẫn</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Hỗ Trợ 24/7</h3>
+                    <p>Đội ngũ tư vấn nhiệt tình, sẵn sàng hỗ trợ bạn mọi lúc mọi nơi</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Đảm Bảo Chất Lượng</h3>
+                    <p>Dịch vụ đạt chuẩn, hướng dẫn viên chuyên nghiệp, lịch trình rõ ràng</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Thanh Toán Linh Hoạt</h3>
+                    <p>Nhiều hình thức thanh toán tiện lợi, bảo mật tuyệt đối</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Về Chúng Tôi</h3>
+                    <p>DuLịchVN - Đơn vị cung cấp dịch vụ du lịch uy tín, chuyên nghiệp với hơn 10 năm kinh nghiệm.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Liên Kết Nhanh</h3>
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="tour-list.html">Tours</a></li>
+                        <li><a href="#destinations">Điểm đến</a></li>
+                        <li><a href="#contact">Liên hệ</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Hỗ Trợ</h3>
+                    <ul>
+                        <li><a href="#">Chính sách hoàn hủy</a></li>
+                        <li><a href="#">Điều khoản sử dụng</a></li>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                        <li><a href="#">Hướng dẫn đặt tour</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col" id="contact">
+                    <h3>Liên Hệ</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i> 1900 1234</li>
+                        <li><i class="fas fa-envelope"></i> info@dulichvn.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 DuLịchVN. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Users - Admin</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-plane-departure"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="tours.html">
+                    <i class="fas fa-map-marked-alt"></i> Quản lý Tours
+                </a>
+                <a href="bookings.html">
+                    <i class="fas fa-ticket-alt"></i> Quản lý Bookings
+                </a>
+                <a href="users.html" class="active">
+                    <i class="fas fa-users"></i> Quản lý Users
+                </a>
+                <a href="reviews.html">
+                    <i class="fas fa-star"></i> Quản lý Reviews
+                </a>
+                <a href="../index.html">
+                    <i class="fas fa-globe"></i> Về Website
+                </a>
+            </nav>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <strong id="adminName">Admin</strong>
+                    <small id="adminEmail">admin@toursite.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Quản lý Users</h1>
+                <button id="btnLogout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </header>
+
+            <div class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Họ Tên</th>
+                                <th>Email</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Vai Trò</th>
+                                <th>Ngày Đăng Ký</th>
+                                <th>Đăng Nhập Cuối</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr>
+                                <td colspan="7" class="text-center">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        (function() {
+            const { apiRequest, formatDate, formatDateTime, isLoggedIn, getUserData, logout } = window.TourBooking || {};
+
+        function checkAdminAccess() {
+            if (!isLoggedIn()) {
+                window.location.href = '../login.html';
+                return false;
+            }
+            const user = getUserData();
+            if (user.role !== 'admin') {
+                alert('Bạn không có quyền truy cập');
+                window.location.href = '../index.html';
+                return false;
+            }
+            document.getElementById('adminName').textContent = user.full_name || 'Admin';
+            document.getElementById('adminEmail').textContent = user.email;
+            return true;
+        }
+
+        async function loadUsers() {
+            try {
+                const res = await apiRequest('/admin/users');
+                if (res.success) {
+                    renderUsers(res.data);
+                }
+            } catch (error) {
+                console.error('Load users error:', error);
+                document.getElementById('usersTable').innerHTML = '<tr><td colspan="7" class="text-center">Lỗi tải dữ liệu</td></tr>';
+            }
+        }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">Chưa có user nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.user_id}</td>
+                    <td><strong>${user.full_name || '-'}</strong></td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || '-'}</td>
+                    <td>
+                        <span class="status-badge status-${user.role}">
+                            ${user.role === 'admin' ? 'Admin' : 'Customer'}
+                        </span>
+                    </td>
+                    <td>${formatDate(user.created_at)}</td>
+                    <td>${user.last_login ? formatDateTime(user.last_login) : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('btnLogout')?.addEventListener('click', () => {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) logout();
+        });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (checkAdminAccess()) loadUsers();
+            });
+        })();
+    </script>
+</body>
+</html>

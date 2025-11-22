@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân - Du Lịch Việt Nam</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 4px solid #0077b6;
+        }
+        .upload-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #0077b6;
+            color: white;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .upload-btn:hover {
+            background: #023e8a;
+        }
+        .upload-btn input {
+            display: none;
+        }
+        .info-section {
+            margin-top: 2rem;
+        }
+        .info-row {
+            display: flex;
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-label {
+            width: 150px;
+            font-weight: 600;
+            color: #555;
+        }
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <i class="fas fa-plane-departure"></i>
+                        <span>DuLịchVN</span>
+                    </a>
+                </div>
+                
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="tour-list.html">Tours</a></li>
+                        <li><a href="my-bookings.html">Đặt chỗ của tôi</a></li>
+                        <li><a href="profile.html" class="active">Hồ sơ</a></li>
+                    </ul>
+                </nav>
+
+                <div class="header-actions">
+                    <div class="auth-links" id="authLinks">
+                        <a href="login.html" class="btn-login">Đăng nhập</a>
+                        <a href="register.html" class="btn-register">Đăng ký</a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="btn-user" id="btnUserDropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName"></span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown" style="display: none;">
+                            <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
+                            <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1>Hồ sơ cá nhân</h1>
+            </div>
+
+            <div class="avatar-section">
+                <img id="avatarPreview" src="https://via.placeholder.com/150" alt="Avatar" class="avatar-preview">
+                <br>
+                <label class="upload-btn">
+                    <i class="fas fa-upload"></i> Đổi ảnh đại diện
+                    <input type="file" id="avatarInput" accept="image/*">
+                </label>
+                <p style="color: #888; margin-top: 0.5rem; font-size: 0.9rem;">
+                    Chỉ chấp nhận ảnh JPG, PNG, GIF. Tối đa 5MB
+                </p>
+            </div>
+
+            <div class="info-section">
+                <div class="info-row">
+                    <div class="info-label">Họ và tên:</div>
+                    <div class="info-value" id="fullName">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Email:</div>
+                    <div class="info-value" id="email">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Số điện thoại:</div>
+                    <div class="info-value" id="phone">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Vai trò:</div>
+                    <div class="info-value" id="role">-</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>Về Chúng Tôi</h3>
+                    <p>DuLịchVN - Đơn vị cung cấp dịch vụ du lịch uy tín, chuyên nghiệp.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Liên Hệ</h3>
+                    <p><i class="fas fa-phone"></i> 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> info@dulichvn.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DuLịchVN. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+
+        // Load user info
+        function loadProfile() {
+            const user = getUserData();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('fullName').textContent = user.full_name || '-';
+            document.getElementById('email').textContent = user.email || '-';
+            document.getElementById('phone').textContent = user.phone || '-';
+            document.getElementById('role').textContent = user.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
+            
+            if (user.avatar_url) {
+                document.getElementById('avatarPreview').src = user.avatar_url.startsWith('http') 
+                    ? user.avatar_url 
+                    : API_URL.replace('/api', '') + user.avatar_url;
+            }
+        }
+
+        // Upload avatar
+        document.getElementById('avatarInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate file size
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('File quá lớn. Tối đa 5MB', 'error');
+                return;
+            }
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast('Chỉ chấp nhận file ảnh', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            try {
+                const res = await fetch(`${API_URL}/upload/avatar`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Cập nhật ảnh đại diện thành công!', 'success');
+                    
+                    // Update preview
+                    const fullUrl = data.data.full_url || (API_URL.replace('/api', '') + data.data.image_url);
+                    document.getElementById('avatarPreview').src = fullUrl;
+                    
+                    // Update localStorage
+                    const user = getUserData();
+                    user.avatar_url = data.data.image_url;
+                    localStorage.setItem('userData', JSON.stringify(user));
+                } else {
+                    showToast(data.message || 'Upload thất bại', 'error');
+                }
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('Có lỗi xảy ra khi upload ảnh', 'error');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            loadProfile();
+        });
+    </script>
+</body>
+</html>

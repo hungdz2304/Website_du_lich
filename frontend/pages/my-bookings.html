@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt tour của tôi - Du Lịch Việt Nam</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/my-bookings.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <i class="fas fa-plane-departure"></i>
+                        <span>DuLịchVN</span>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="tour-list.html">Tours</a></li>
+                        <li><a href="index.html#destinations">Điểm đến</a></li>
+                        <li><a href="index.html#contact">Liên hệ</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="auth-links" id="authLinks">
+                        <a href="login.html" class="btn-login">Đăng nhập</a>
+                        <a href="register.html" class="btn-register">Đăng ký</a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="btn-user" id="btnUserDropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName"></span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown" style="display: none;">
+                            <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
+                            <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="bookings-main">
+        <div class="container">
+            <div class="bookings-header">
+                <div>
+                    <h1>Đặt chỗ của tôi</h1>
+                    <p class="text-muted">Theo dõi trạng thái và thông tin chi tiết các tour bạn đã đặt</p>
+                </div>
+                <div>
+                    <label for="filterStatus">Trạng thái:</label>
+                    <select id="filterStatus">
+                        <option value="">Tất cả</option>
+                        <option value="pending">Chờ xác nhận</option>
+                        <option value="confirmed">Đã xác nhận</option>
+                        <option value="completed">Hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="loading-state" id="loadingBookings" style="display:none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Đang tải dữ liệu...</p>
+            </div>
+
+            <div class="empty-state" id="emptyBookings" style="display:none;">
+                <p>Bạn chưa có đặt chỗ nào. Hãy khám phá và đặt tour ngay!</p>
+            </div>
+
+            <div id="bookingsList"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>DuLịchVN</h3>
+                    <p>Hơn 10 năm đồng hành cùng hàng triệu khách hàng.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Liên hệ</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i> 1900 1234</li>
+                        <li><i class="fas fa-envelope"></i> info@dulichvn.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DuLịchVN. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/my-bookings.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Tours - Admin</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-plane-departure"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="tours.html" class="active">
+                    <i class="fas fa-map-marked-alt"></i> Quản lý Tours
+                </a>
+                <a href="bookings.html">
+                    <i class="fas fa-ticket-alt"></i> Quản lý Bookings
+                </a>
+                <a href="users.html">
+                    <i class="fas fa-users"></i> Quản lý Users
+                </a>
+                <a href="reviews.html">
+                    <i class="fas fa-star"></i> Quản lý Reviews
+                </a>
+                <a href="../index.html">
+                    <i class="fas fa-globe"></i> Về Website
+                </a>
+            </nav>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <strong id="adminName">Admin</strong>
+                    <small id="adminEmail">admin@toursite.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Quản lý Tours</h1>
+                <button id="btnLogout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </header>
+
+            <div class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên Tour</th>
+                                <th>Điểm đến</th>
+                                <th>Thời gian</th>
+                                <th>Giá</th>
+                                <th>Rating</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="toursTable">
+                            <tr>
+                                <td colspan="8" class="text-center">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        (function() {
+            const { apiRequest, formatPrice, isLoggedIn, getUserData, logout } = window.TourBooking || {};
+
+        function checkAdminAccess() {
+            if (!isLoggedIn()) {
+                window.location.href = '../login.html';
+                return false;
+            }
+            const user = getUserData();
+            if (user.role !== 'admin') {
+                alert('Bạn không có quyền truy cập');
+                window.location.href = '../index.html';
+                return false;
+            }
+            document.getElementById('adminName').textContent = user.full_name || 'Admin';
+            document.getElementById('adminEmail').textContent = user.email;
+            return true;
+        }
+
+        async function loadTours() {
+            try {
+                const res = await apiRequest('/tours?limit=100');
+                if (res.success) {
+                    renderTours(res.data.tours);
+                }
+            } catch (error) {
+                console.error('Load tours error:', error);
+                document.getElementById('toursTable').innerHTML = '<tr><td colspan="8" class="text-center">Lỗi tải dữ liệu</td></tr>';
+            }
+        }
+
+        function renderTours(tours) {
+            const tbody = document.getElementById('toursTable');
+            if (tours.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">Chưa có tour nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = tours.map(tour => {
+                const rating = parseFloat(tour.rating_average) || 0;
+                return `
+                <tr>
+                    <td>${tour.tour_id}</td>
+                    <td><strong>${tour.title}</strong></td>
+                    <td>${tour.destination_name || '-'}</td>
+                    <td>${tour.duration_days}N${tour.duration_nights}Đ</td>
+                    <td>${formatPrice(tour.price_adult)}</td>
+                    <td>
+                        <i class="fas fa-star" style="color: #ffc107;"></i> 
+                        ${rating.toFixed(1)} (${tour.review_count || 0})
+                    </td>
+                    <td><span class="status-badge status-${tour.status}">${tour.status}</span></td>
+                    <td>
+                        <button class="btn-sm btn-primary" onclick="viewTour(${tour.tour_id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('btnLogout')?.addEventListener('click', () => {
+            if (confirm('Bạn có chắc muốn đăng xuất?')) logout();
+        });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (checkAdminAccess()) loadTours();
+            });
+        })();
+
+        // Global function for onclick
+        function viewTour(tourId) {
+            window.location.href = `../tour-detail.html?id=${tourId}`;
+        }
+    </script>
+</body>
+</html>

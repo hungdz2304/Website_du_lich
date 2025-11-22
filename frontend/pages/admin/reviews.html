@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Reviews - Admin</title>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">
+                <i class="fas fa-plane-departure"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-nav">
+                <a href="index.html">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="tours.html">
+                    <i class="fas fa-map-marked-alt"></i> Quản lý Tours
+                </a>
+                <a href="bookings.html">
+                    <i class="fas fa-ticket-alt"></i> Quản lý Bookings
+                </a>
+                <a href="users.html">
+                    <i class="fas fa-users"></i> Quản lý Users
+                </a>
+                <a href="reviews.html" class="active">
+                    <i class="fas fa-star"></i> Quản lý Reviews
+                </a>
+                <a href="../index.html">
+                    <i class="fas fa-globe"></i> Về Website
+                </a>
+            </nav>
+            <div class="admin-user">
+                <i class="fas fa-user-shield"></i>
+                <div>
+                    <strong id="adminName">Admin</strong>
+                    <small id="adminEmail">admin@toursite.com</small>
+                </div>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-header">
+                <h1>Quản lý Reviews</h1>
+                <button id="btnLogout" class="btn-logout">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </header>
+
+            <div class="admin-section">
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Tour</th>
+                                <th>User</th>
+                                <th>Rating</th>
+                                <th>Tiêu Đề</th>
+                                <th>Nội Dung</th>
+                                <th>Ngày Tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reviewsTable">
+                            <tr>
+                                <td colspan="7" class="text-center">Đang tải...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script>
+        (function() {
+            const { apiRequest, formatDate, isLoggedIn, getUserData, logout } = window.TourBooking || {};
+
+            function checkAdminAccess() {
+                if (!isLoggedIn()) {
+                    window.location.href = '../login.html';
+                    return false;
+                }
+                const user = getUserData();
+                if (user.role !== 'admin') {
+                    alert('Bạn không có quyền truy cập');
+                    window.location.href = '../index.html';
+                    return false;
+                }
+                document.getElementById('adminName').textContent = user.full_name || 'Admin';
+                document.getElementById('adminEmail').textContent = user.email;
+                return true;
+            }
+
+            async function loadReviews() {
+                try {
+                    // Get all tours and their reviews
+                    const toursRes = await apiRequest('/tours?limit=100');
+                    if (toursRes.success) {
+                        const allReviews = [];
+                        for (const tour of toursRes.data.tours) {
+                            const reviewsRes = await apiRequest(`/tours/${tour.tour_id}/reviews`);
+                            if (reviewsRes.success && reviewsRes.data.reviews) {
+                                reviewsRes.data.reviews.forEach(review => {
+                                    allReviews.push({
+                                        ...review,
+                                        tour_title: tour.title
+                                    });
+                                });
+                            }
+                        }
+                        renderReviews(allReviews);
+                    }
+                } catch (error) {
+                    console.error('Load reviews error:', error);
+                    document.getElementById('reviewsTable').innerHTML = '<tr><td colspan="7" class="text-center">Lỗi tải dữ liệu</td></tr>';
+                }
+            }
+
+        function renderReviews(reviews) {
+            const tbody = document.getElementById('reviewsTable');
+            if (reviews.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center">Chưa có review nào</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = reviews.map(review => `
+                <tr>
+                    <td>${review.review_id}</td>
+                    <td>${review.tour_title}</td>
+                    <td>${review.reviewer_name || 'Unknown'}</td>
+                    <td>
+                        ${generateStars(review.rating)}
+                        <strong>${review.rating}/5</strong>
+                    </td>
+                    <td>${review.title || '-'}</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        ${review.comment}
+                    </td>
+                    <td>${formatDate(review.created_at)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star" style="color: #ffc107;"></i>';
+                } else {
+                    stars += '<i class="far fa-star" style="color: #ccc;"></i>';
+                }
+            }
+            return stars;
+        }
+
+            document.getElementById('btnLogout')?.addEventListener('click', () => {
+                if (confirm('Bạn có chắc muốn đăng xuất?')) logout();
+            });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                if (checkAdminAccess()) loadReviews();
+            });
+        })();
+    </script>
+</body>
+</html>

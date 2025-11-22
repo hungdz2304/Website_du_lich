@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách tour - Du Lịch Việt Nam</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/tour-list.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a href="index.html">
+                        <i class="fas fa-plane-departure"></i>
+                        <span>DuLịchVN</span>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="tour-list.html" class="active">Tours</a></li>
+                        <li><a href="index.html#destinations">Điểm đến</a></li>
+                        <li><a href="index.html#contact">Liên hệ</a></li>
+                    </ul>
+                </nav>
+                <div class="header-actions">
+                    <div class="auth-links" id="authLinks">
+                        <a href="login.html" class="btn-login">Đăng nhập</a>
+                        <a href="register.html" class="btn-register">Đăng ký</a>
+                    </div>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <button class="btn-user" id="btnUserDropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName"></span>
+                        </button>
+                        <div class="user-dropdown" id="userDropdown" style="display: none;">
+                            <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
+                            <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="tour-list-main">
+        <div class="container">
+            <div class="list-header">
+                <p class="text-muted">Khám phá hàng trăm tour du lịch trong nước & quốc tế</p>
+            </div>
+
+            <section class="filter-panel">
+                <form id="filterForm">
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label for="filterKeyword">Từ khóa</label>
+                            <input type="text" id="filterKeyword" placeholder="Nhập điểm đến hoặc tên tour">
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterDestination">Điểm đến</label>
+                            <select id="filterDestination">
+                                <option value="">Tất cả</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterMinPrice">Giá từ</label>
+                            <input type="number" id="filterMinPrice" placeholder="Ví dụ 3000000">
+                        </div>
+                        <div class="filter-group">
+                            <label for="filterMaxPrice">Đến</label>
+                            <input type="number" id="filterMaxPrice" placeholder="Ví dụ 9000000">
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-filter"></i> Áp dụng lọc
+                        </button>
+                        <button type="button" id="btnClearFilters" class="btn-outline">
+                            <i class="fas fa-undo"></i> Xóa bộ lọc
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <div class="results-header">
+                <div id="resultsSummary">Đang tải tour...</div>
+                <div>
+                    <label for="sortSelect">Sắp xếp:</label>
+                    <select id="sortSelect">
+                        <option value="newest">Mới nhất</option>
+                        <option value="price_asc">Giá tăng dần</option>
+                        <option value="price_desc">Giá giảm dần</option>
+                        <option value="rating">Đánh giá cao</option>
+                        <option value="popular">Phổ biến</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="loading-state" id="loadingTours" style="display:none;">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Đang tải tour...</p>
+            </div>
+
+            <div class="empty-state" id="emptyTours" style="display:none;">
+                <p>Không tìm thấy tour phù hợp. Hãy thử thay đổi bộ lọc.</p>
+            </div>
+
+            <div class="tours-grid" id="toursGrid"></div>
+
+            <div class="pagination" id="paginationControls"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>DuLịchVN</h3>
+                    <p>Hơn 10 năm kinh nghiệm tổ chức du lịch trọn gói.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Hỗ trợ</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i> 1900 1234</li>
+                        <li><i class="fas fa-envelope"></i> info@dulichvn.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 DuLịchVN. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/tour-list.js"></script>
+</body>
+</html>

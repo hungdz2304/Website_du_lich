@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        button { padding: 10px 20px; background: #0077b6; color: white; border: none; cursor: pointer; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test Backend API</h1>
+
+    <div class="test">
+        <h2>Test 1: Login Admin</h2>
+        <button onclick="testAdminLogin()">Test Admin Login</button>
+        <pre id="admin-result"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 2: Login Customer</h2>
+        <button onclick="testCustomerLogin()">Test Customer Login</button>
+        <pre id="customer-result"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 3: Get Tour Reviews (Tour ID: 1)</h2>
+        <button onclick="testGetReviews()">Test Get Reviews</button>
+        <pre id="reviews-result"></pre>
+    </div>
+
+    <div class="test">
+        <h2>Test 4: Create Review (Need Login First)</h2>
+        <button onclick="testCreateReview()">Test Create Review</button>
+        <pre id="create-review-result"></pre>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        let authToken = null;
+
+        async function testAdminLogin() {
+            const resultEl = document.getElementById('admin-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'admin@toursite.com',
+                        password: 'password123'
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (data.success) {
+                    authToken = data.data.token;
+                    resultEl.className = 'success';
+                    resultEl.textContent = 'SUCCESS!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultEl.className = 'error';
+                    resultEl.textContent = 'FAILED!\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultEl.className = 'error';
+                resultEl.textContent = 'ERROR: ' + error.message + '\n\nBackend có đang chạy không? Kiểm tra: http://localhost:3000';
+            }
+        }
+
+        async function testCustomerLogin() {
+            const resultEl = document.getElementById('customer-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: 'customer@example.com',
+                        password: 'password123'
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (data.success) {
+                    authToken = data.data.token;
+                    resultEl.className = 'success';
+                    resultEl.textContent = 'SUCCESS!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultEl.className = 'error';
+                    resultEl.textContent = 'FAILED!\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultEl.className = 'error';
+                resultEl.textContent = 'ERROR: ' + error.message;
+            }
+        }
+
+        async function testGetReviews() {
+            const resultEl = document.getElementById('reviews-result');
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const res = await fetch(`${API_URL}/tours/1/reviews`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    resultEl.className = 'success';
+                    resultEl.textContent = 'SUCCESS!\n\nFound ' + (data.data.reviews ? data.data.reviews.length : 0) + ' reviews\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultEl.className = 'error';
+                    resultEl.textContent = 'FAILED!\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultEl.className = 'error';
+                resultEl.textContent = 'ERROR: ' + error.message;
+            }
+        }
+
+        async function testCreateReview() {
+            const resultEl = document.getElementById('create-review-result');
+            
+            if (!authToken) {
+                resultEl.className = 'error';
+                resultEl.textContent = 'ERROR: Please login first (Test 1 or Test 2)';
+                return;
+            }
+
+            resultEl.textContent = 'Testing...';
+            
+            try {
+                const res = await fetch(`${API_URL}/reviews`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        tour_id: 1,
+                        rating: 5,
+                        title: 'Test Review from API Test',
+                        comment: 'This is a test review created at ' + new Date().toLocaleString(),
+                        rating_service: 5,
+                        rating_location: 5,
+                        rating_price: 4,
+                        rating_food: 5
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (data.success) {
+                    resultEl.className = 'success';
+                    resultEl.textContent = 'SUCCESS! Review created!\n\n' + JSON.stringify(data, null, 2);
+                } else {
+                    resultEl.className = 'error';
+                    resultEl.textContent = 'FAILED!\n\n' + JSON.stringify(data, null, 2);
+                }
+            } catch (error) {
+                resultEl.className = 'error';
+                resultEl.textContent = 'ERROR: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
