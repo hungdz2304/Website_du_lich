@@ -125,7 +125,17 @@ const tourQueryValidation = [
         .withMessage('Maximum price must be a positive number'),
     query('sort_by')
         .optional()
-        .isIn(['price_asc', 'price_desc', 'rating', 'popular', 'newest'])
+        .isIn([
+            'id_asc',
+            'id_desc',
+            'price_asc',
+            'price_desc',
+            'rating',
+            'rating_asc',
+            'rating_desc',
+            'popular',
+            'newest'
+        ])
         .withMessage('Invalid sort option'),
     query('limit')
         .optional()
@@ -135,6 +145,84 @@ const tourQueryValidation = [
         .optional()
         .isInt({ min: 1 })
         .withMessage('Page must be a positive integer')
+];
+
+// Create Tour Validation (admin)
+const createTourValidation = [
+    body('destination_id')
+        .isInt({ min: 1 })
+        .withMessage('destination_id must be a valid integer'),
+    body('title')
+        .trim()
+        .notEmpty()
+        .withMessage('title is required')
+        .isLength({ max: 255 })
+        .withMessage('title must not exceed 255 characters'),
+    body('slug')
+        .trim()
+        .notEmpty()
+        .withMessage('slug is required')
+        .isLength({ max: 255 })
+        .withMessage('slug must not exceed 255 characters'),
+    body('itinerary')
+        .optional()
+        .isString()
+        .withMessage('itinerary must be a string'),
+    body('price_adult')
+        .isFloat({ min: 0 })
+        .withMessage('price_adult must be a positive number'),
+    body('duration_days')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('duration_days must be at least 1'),
+    body('duration_nights')
+        .optional()
+        .isInt({ min: 0 })
+        .withMessage('duration_nights must be 0 or greater'),
+    body('image_gallery')
+        .optional()
+        .isArray()
+        .withMessage('image_gallery must be an array'),
+    body('inclusions')
+        .optional()
+        .isArray()
+        .withMessage('inclusions must be an array'),
+    body('exclusions')
+        .optional()
+        .isArray()
+        .withMessage('exclusions must be an array'),
+    body('categories')
+        .optional()
+        .isArray()
+        .withMessage('categories must be an array of category IDs'),
+    body('categories.*')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('Each category_id must be a valid integer'),
+    body('schedules')
+        .optional()
+        .isArray()
+        .withMessage('schedules must be an array'),
+    body('schedules.*.departure_date')
+        .optional()
+        .isISO8601()
+        .withMessage('departure_date must be a valid date'),
+    body('schedules.*.return_date')
+        .optional()
+        .isISO8601()
+        .withMessage('return_date must be a valid date'),
+    body('schedules.*.available_slots')
+        .optional()
+        .isInt({ min: 1 })
+        .withMessage('available_slots must be at least 1'),
+    body('schedules.*.price_adult')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage('price_adult must be a positive number for schedules'),
+    body('schedules.*.price_child')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage('price_child must be a positive number for schedules')
 ];
 
 /**
@@ -163,5 +251,6 @@ module.exports = {
     bookingValidation,
     reviewValidation,
     tourQueryValidation,
+    createTourValidation,
     validate
 };

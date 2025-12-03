@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const tourController = require('../controllers/tourController');
-const { tourQueryValidation, validate } = require('../utils/validators');
+const { tourQueryValidation, createTourValidation, validate } = require('../utils/validators');
+const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 
 /**
  * @route   GET /api/tours/featured
@@ -18,6 +19,13 @@ router.get('/featured', tourController.getFeaturedTours);
 router.get('/slug/:slug', tourController.getTourBySlug);
 
 /**
+ * @route   GET /api/tours/:id/reviews
+ * @desc    Get tour reviews
+ * @access  Public
+ */
+router.get('/:id/reviews', tourController.getTourReviews);
+
+/**
  * @route   GET /api/tours/:id
  * @desc    Get tour by ID
  * @access  Public
@@ -25,11 +33,25 @@ router.get('/slug/:slug', tourController.getTourBySlug);
 router.get('/:id', tourController.getTourById);
 
 /**
- * @route   GET /api/tours/:id/reviews
- * @desc    Get tour reviews
- * @access  Public
+ * @route   POST /api/tours
+ * @desc    Create a new tour (admin only)
+ * @access  Private (Admin)
  */
-router.get('/:id/reviews', tourController.getTourReviews);
+router.post('/', authMiddleware, adminMiddleware, createTourValidation, validate, tourController.createTour);
+
+/**
+ * @route   PUT /api/tours/:id
+ * @desc    Update a tour (admin only)
+ * @access  Private (Admin)
+ */
+router.put('/:id', authMiddleware, adminMiddleware, createTourValidation, validate, tourController.updateTour);
+
+/**
+ * @route   DELETE /api/tours/:id
+ * @desc    Delete a tour (admin only)
+ * @access  Private (Admin)
+ */
+router.delete('/:id', authMiddleware, adminMiddleware, tourController.deleteTour);
 
 /**
  * @route   GET /api/tours

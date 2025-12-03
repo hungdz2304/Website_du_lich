@@ -227,7 +227,7 @@ INSERT INTO tour_schedules (tour_id, departure_date, return_date, available_slot
 
 -- Nha Trang schedules
 (3, '2025-12-18', '2025-12-21', 30, 15, 5490000, 4490000, 'available'),
-(3, '2026-01-05', '2026-01-08', 30, 0, 5490000, 4490000, 'available');
+(3, '2026-01-05', '2026-01-08', 30, 0, 5490000, 4490000, 'available'),
 
 -- Hạ Long schedules
 (4, '2025-12-10', '2025-12-11', 20, 10, 3990000, 2990000, 'available'),
@@ -235,7 +235,7 @@ INSERT INTO tour_schedules (tour_id, departure_date, return_date, available_slot
 
 -- Sapa schedules
 (5, '2025-12-05', '2025-12-07', 25, 12, 4490000, 3490000, 'available'),
-(5, '2026-02-02', '2026-02-04', 25, 6, 4690000, 3690000, 'available');
+(5, '2026-02-02', '2026-02-04', 25, 6, 4690000, 3690000, 'available'),
 
 -- Hội An - Đà Nẵng schedules
 (6, '2025-12-20', '2025-12-23', 30, 18, 6990000, 5990000, 'available'),

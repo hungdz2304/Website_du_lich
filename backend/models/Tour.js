@@ -7,6 +7,12 @@ const buildCategorySubquery = () => `(
     WHERE tc.tour_id = t.tour_id
 )`;
 
+const buildCategoryIdsSubquery = () => `(
+    SELECT GROUP_CONCAT(DISTINCT tc.category_id)
+    FROM tour_categories tc
+    WHERE tc.tour_id = t.tour_id
+)`;
+
 const parseJsonArray = value => {
     if (!value) return [];
     try {
@@ -21,17 +27,272 @@ const mapTourRow = tour => ({
     ...tour,
     image_gallery: parseJsonArray(tour.image_gallery),
     inclusions: parseJsonArray(tour.inclusions),
-    exclusions: parseJsonArray(tour.exclusions)
+    exclusions: parseJsonArray(tour.exclusions),
+    category_ids: (tour.category_ids || '')
+        .split(',')
+        .map(id => parseInt(id, 10))
+        .filter(id => !Number.isNaN(id))
 });
 
 const Tour = {
+    async create(data) {
+        const connection = await db.getConnection();
+        try {
+            await connection.beginTransaction();
+
+            const {
+                destination_id,
+                title,
+                slug,
+                description = '',
+                itinerary = '',
+                duration_days = 1,
+                duration_nights = 0,
+                price_adult,
+                price_child = 0,
+                price_infant = 0,
+                original_price = null,
+                discount_percentage = 0,
+                cover_image_url = null,
+                image_gallery = [],
+                departure_location = null,
+                transportation = null,
+                hotel_rating = null,
+                max_participants = null,
+                min_participants = 1,
+                inclusions = [],
+                exclusions = [],
+                is_featured = false,
+                is_active = true,
+                status = 'active',
+                meta_title = null,
+                meta_description = null,
+                meta_keywords = null,
+                categories = [],
+                schedules = []
+            } = data;
+
+            const [result] = await connection.execute(
+                `
+                INSERT INTO tours (
+                    destination_id, title, slug, description, itinerary,
+                    duration_days, duration_nights,
+                    price_adult, price_child, price_infant, original_price, discount_percentage,
+                    cover_image_url, image_gallery,
+                    departure_location, transportation, hotel_rating,
+                    max_participants, min_participants,
+                    inclusions, exclusions,
+                    is_featured, is_active, status,
+                    meta_title, meta_description, meta_keywords
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `,
+                [
+                    destination_id,
+                    title,
+                    slug,
+                    description,
+                    itinerary,
+                    duration_days,
+                    duration_nights,
+                    price_adult,
+                    price_child,
+                    price_infant,
+                    original_price,
+                    discount_percentage,
+                    cover_image_url,
+                    JSON.stringify(image_gallery || []),
+                    departure_location,
+                    transportation,
+                    hotel_rating,
+                max_participants,
+                min_participants,
+                JSON.stringify(inclusions || []),
+                JSON.stringify(exclusions || []),
+                is_featured ? 1 : 0,
+                    is_active ? 1 : 0,
+                    status,
+                    meta_title,
+                    meta_description,
+                    meta_keywords
+                ]
+            );
+
+            const tourId = result.insertId;
+
+            if (categories && Array.isArray(categories) && categories.length > 0) {
+                const categoryValues = categories.map(catId => [tourId, catId]);
+                await connection.query(
+                    'INSERT INTO tour_categories (tour_id, category_id) VALUES ?',
+                    [categoryValues]
+                );
+            }
+
+            if (schedules && Array.isArray(schedules) && schedules.length > 0) {
+                const scheduleValues = schedules.map(s => [
+                    tourId,
+                    s.departure_date,
+                    s.return_date,
+                    s.available_slots || 0,
+                    s.booked_slots || 0,
+                    s.price_adult || price_adult,
+                    s.price_child || price_child,
+                    s.price_infant || price_infant,
+                    s.status || 'available'
+                ]);
+
+                await connection.query(
+                    `INSERT INTO tour_schedules 
+                        (tour_id, departure_date, return_date, available_slots, booked_slots, price_adult, price_child, price_infant, status)
+                     VALUES ?`,
+                    [scheduleValues]
+                );
+            }
+
+            await connection.commit();
+            return tourId;
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
+    },
+
+    async update(tourId, data) {
+        const connection = await db.getConnection();
+        try {
+            await connection.beginTransaction();
+
+            const {
+                destination_id,
+                title,
+                slug,
+                description = '',
+                itinerary = '',
+                duration_days = 1,
+                duration_nights = 0,
+                price_adult,
+                price_child = 0,
+                price_infant = 0,
+                original_price = null,
+                discount_percentage = 0,
+                cover_image_url = null,
+                image_gallery = [],
+                departure_location = null,
+                transportation = null,
+                hotel_rating = null,
+                max_participants = null,
+                min_participants = 1,
+                inclusions = [],
+                exclusions = [],
+                is_featured = false,
+                is_active = true,
+                status = 'active',
+                meta_title = null,
+                meta_description = null,
+                meta_keywords = null,
+                categories = []
+            } = data;
+
+            const [result] = await connection.execute(
+                `
+                UPDATE tours SET
+                    destination_id = ?,
+                    title = ?,
+                    slug = ?,
+                    description = ?,
+                    itinerary = ?,
+                    duration_days = ?,
+                    duration_nights = ?,
+                    price_adult = ?,
+                    price_child = ?,
+                    price_infant = ?,
+                    original_price = ?,
+                    discount_percentage = ?,
+                    cover_image_url = ?,
+                    image_gallery = ?,
+                    departure_location = ?,
+                    transportation = ?,
+                    hotel_rating = ?,
+                    max_participants = ?,
+                    min_participants = ?,
+                    inclusions = ?,
+                    exclusions = ?,
+                    is_featured = ?,
+                    is_active = ?,
+                    status = ?,
+                    meta_title = ?,
+                    meta_description = ?,
+                    meta_keywords = ?
+                WHERE tour_id = ?
+                `,
+                [
+                    destination_id,
+                    title,
+                    slug,
+                    description,
+                    itinerary,
+                    duration_days,
+                    duration_nights,
+                    price_adult,
+                    price_child,
+                    price_infant,
+                    original_price,
+                    discount_percentage,
+                    cover_image_url,
+                    JSON.stringify(image_gallery || []),
+                    departure_location,
+                    transportation,
+                    hotel_rating,
+                    max_participants,
+                    min_participants,
+                    JSON.stringify(inclusions || []),
+                    JSON.stringify(exclusions || []),
+                    is_featured ? 1 : 0,
+                    is_active ? 1 : 0,
+                    status,
+                    meta_title,
+                    meta_description,
+                    meta_keywords,
+                    tourId
+                ]
+            );
+
+            if (categories && Array.isArray(categories)) {
+                await connection.execute('DELETE FROM tour_categories WHERE tour_id = ?', [tourId]);
+                if (categories.length > 0) {
+                    const categoryValues = categories.map(catId => [tourId, catId]);
+                    await connection.query(
+                        'INSERT INTO tour_categories (tour_id, category_id) VALUES ?',
+                        [categoryValues]
+                    );
+                }
+            }
+
+            await connection.commit();
+            return result.affectedRows > 0;
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
+    },
+
+    async delete(tourId) {
+        const [result] = await db.execute('DELETE FROM tours WHERE tour_id = ?', [tourId]);
+        return result.affectedRows > 0;
+    },
+
     async getAll(filters = {}) {
         let query = `
             SELECT 
                 t.*,
                 d.name as destination_name,
                 d.slug as destination_slug,
-                ${buildCategorySubquery()} as categories
+                ${buildCategorySubquery()} as categories,
+                ${buildCategoryIdsSubquery()} as category_ids
             FROM tours t
             LEFT JOIN destinations d ON t.destination_id = d.destination_id
             WHERE t.is_active = TRUE
@@ -70,6 +331,12 @@ const Tour = {
 
         if (filters.sort_by) {
             switch (filters.sort_by) {
+                case 'id_asc':
+                    query += ' ORDER BY t.tour_id ASC';
+                    break;
+                case 'id_desc':
+                    query += ' ORDER BY t.tour_id DESC';
+                    break;
                 case 'price_asc':
                     query += ' ORDER BY t.price_adult ASC';
                     break;
@@ -77,7 +344,11 @@ const Tour = {
                     query += ' ORDER BY t.price_adult DESC';
                     break;
                 case 'rating':
+                case 'rating_desc':
                     query += ' ORDER BY t.rating_average DESC';
+                    break;
+                case 'rating_asc':
+                    query += ' ORDER BY t.rating_average ASC';
                     break;
                 case 'popular':
                     query += ' ORDER BY t.booking_count DESC';
@@ -86,10 +357,10 @@ const Tour = {
                     query += ' ORDER BY t.created_at DESC';
                     break;
                 default:
-                    query += ' ORDER BY t.created_at DESC';
+                    query += ' ORDER BY t.tour_id ASC';
             }
         } else {
-            query += ' ORDER BY t.created_at DESC';
+            query += ' ORDER BY t.tour_id ASC';
         }
 
         const limit = filters.limit || 12;
@@ -173,7 +444,8 @@ const Tour = {
                 d.slug as destination_slug,
                 d.country,
                 d.region,
-                ${buildCategorySubquery()} as categories
+                ${buildCategorySubquery()} as categories,
+                ${buildCategoryIdsSubquery()} as category_ids
             FROM tours t
             LEFT JOIN destinations d ON t.destination_id = d.destination_id
             WHERE t.tour_id = ?
@@ -192,7 +464,8 @@ const Tour = {
                 d.slug as destination_slug,
                 d.country,
                 d.region,
-                ${buildCategorySubquery()} as categories
+                ${buildCategorySubquery()} as categories,
+                ${buildCategoryIdsSubquery()} as category_ids
             FROM tours t
             LEFT JOIN destinations d ON t.destination_id = d.destination_id
             WHERE t.slug = ?
