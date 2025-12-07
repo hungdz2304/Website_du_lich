@@ -52,9 +52,7 @@ function renderFeaturedTours(tours) {
                 <img src="${getTourImage(tour)}" 
                      alt="${tour.title}"
                      onerror="this.src='${getTourImage()}'">
-                ${tour.discount_percentage > 0 ? `
-                    <span class="tour-badge">-${tour.discount_percentage}%</span>
-                ` : ''}
+                ${tour.discount_percentage > 0 ? `<span class="tour-badge">-${tour.discount_percentage}%</span>` : ''}
             </div>
             <div class="tour-content">
                 <h3 class="tour-name">${tour.title}</h3>
@@ -75,13 +73,13 @@ function renderFeaturedTours(tours) {
                 </div>
                 <div class="tour-footer">
                     <div class="tour-price">
-                        <span class="price-label">Từ</span>
-                        <span class="price-amount">${formatPrice(normalizePrice(tour.price_adult))}</span>
-                        ${tour.original_price ? `
-                            <span class="original-price">${formatPrice(normalizePrice(tour.original_price))}</span>
-                        ` : ''}
+                        <div class="price-row">
+                            <span class="price-amount">${formatPrice(normalizePrice(tour.price_adult))}</span>
+                            ${tour.discount_percentage > 0 ? `<span class="discount-badge">-${tour.discount_percentage}%</span>` : ''}
+                        </div>
+                        ${tour.original_price ? `<span class="original-price">${formatPrice(normalizePrice(tour.original_price))}</span>` : ''}
                     </div>
-                    <a href="tour-detail.html?id=${tour.tour_id}" class="btn-view-tour">Xem chi tiết</a>
+                    <a href="tour-detail.html?id=${tour.tour_id}" class="btn-view-tour btn-full">Xem chi tiết</a>
                 </div>
             </div>
         </div>

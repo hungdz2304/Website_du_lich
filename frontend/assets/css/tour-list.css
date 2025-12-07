@@ -135,6 +135,40 @@
     color: var(--primary-dark);
 }
 
+.tour-card .tour-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.tour-card .price-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tour-card .discount-badge {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.tour-card .original-price {
+    font-size: 0.9rem;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.btn-full {
+    width: 100%;
+    text-align: center;
+}
+
 .loading-state,
 .empty-state {
     text-align: center;

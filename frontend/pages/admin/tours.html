@@ -64,6 +64,10 @@
                             <input id="priceChild" name="price_child" type="number" min="0" step="1000" placeholder="0">
                         </div>
                         <div class="form-field">
+                            <label for="originalPrice">Giá gốc (VND)</label>
+                            <input id="originalPrice" name="original_price" type="number" min="0" step="1000" placeholder="Giá trước khuyến mãi">
+                        </div>
+                        <div class="form-field">
                             <label for="coverImage">Ảnh đại diện (URL)</label>
                             <input id="coverImage" name="cover_image_url" type="text" placeholder="/uploads/tours/pq.jpg hoặc URL">
                         </div>
@@ -264,6 +268,7 @@
                 const destinationId = parseInt(document.getElementById('destinationId').value, 10);
                 const priceAdult = parseFloat(document.getElementById('priceAdult').value);
                 const priceChild = parseFloat(document.getElementById('priceChild').value) || 0;
+                const originalPrice = document.getElementById('originalPrice').value ? parseFloat(document.getElementById('originalPrice').value) : null;
                 const coverImage = document.getElementById('coverImage').value.trim();
                 const durationDays = parseInt(document.getElementById('durationDays').value || '1', 10);
                 const durationNights = parseInt(document.getElementById('durationNights').value || '0', 10);
@@ -279,6 +284,7 @@
                 const status = document.getElementById('status').value;
                 const isFeatured = document.getElementById('isFeatured').checked;
                 const isActive = document.getElementById('isActive').checked;
+                const discountPercentage = originalPrice && priceAdult ? Math.max(0, Math.round(((originalPrice - priceAdult) / originalPrice) * 100)) : 0;
 
                 const scheduleDeparture = document.getElementById('scheduleDeparture').value;
                 const scheduleReturn = document.getElementById('scheduleReturn').value;
@@ -302,6 +308,8 @@
                     itinerary,
                     price_adult: priceAdult,
                     price_child: priceChild,
+                    original_price: originalPrice,
+                    discount_percentage: discountPercentage,
                     cover_image_url: coverImage || null,
                     duration_days: durationDays,
                     duration_nights: durationNights,
@@ -379,6 +387,7 @@
                 document.getElementById('destinationId').value = tour.destination_id || '';
                 document.getElementById('priceAdult').value = tour.price_adult || '';
                 document.getElementById('priceChild').value = tour.price_child || '';
+                document.getElementById('originalPrice').value = tour.original_price || '';
                 document.getElementById('coverImage').value = tour.cover_image_url || '';
                 document.getElementById('durationDays').value = tour.duration_days || '';
                 document.getElementById('durationNights').value = tour.duration_nights || '';

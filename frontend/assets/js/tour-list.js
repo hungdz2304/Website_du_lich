@@ -119,8 +119,14 @@ function renderTours(tours) {
                     </div>
                     <p class="tour-description">${tour.short_description || tour.description?.slice(0, 120) || ''}</p>
                     <div class="tour-footer">
-                        <div class="tour-price">${formatPrice(tour.price_adult || 0)}</div>
-                        <button class="btn-outline" type="button">Xem tour</button>
+                        <div class="tour-price">
+                            <div class="price-row">
+                                <span class="price-amount">${formatPrice(tour.price_adult || 0)}</span>
+                                ${tour.discount_percentage > 0 ? `<span class="discount-badge">-${tour.discount_percentage}%</span>` : ''}
+                            </div>
+                            ${tour.original_price ? `<span class="original-price">${formatPrice(tour.original_price)}</span>` : ''}
+                        </div>
+                        <button class="btn-outline btn-full" type="button">Xem tour</button>
                     </div>
                 </div>
             </div>

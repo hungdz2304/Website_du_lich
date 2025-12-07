@@ -171,6 +171,10 @@ const createTourValidation = [
     body('price_adult')
         .isFloat({ min: 0 })
         .withMessage('price_adult must be a positive number'),
+    body('original_price')
+        .optional()
+        .isFloat({ min: 0 })
+        .withMessage('original_price must be a positive number'),
     body('duration_days')
         .optional()
         .isInt({ min: 1 })

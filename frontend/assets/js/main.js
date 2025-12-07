@@ -20,13 +20,13 @@ const IMAGE_FALLBACKS = {
         'quy-nhon': 'https://images.unsplash.com/photo-1526779259212-939e64782fd0?auto=format&fit=crop&w=900&q=60'
     },
     tour: {
-        default: `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`,
-        'tour-phu-quoc-3n2d-vinwonders': `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`,
-        'tour-da-lat-3n2d-thien-vien': `${API_BASE}/uploads/tours/thumb/da-lat.jpg`,
-        'tour-nha-trang-3n3d-4-dao': `${API_BASE}/uploads/tours/thumb/nha-trang.jpg`,
-        'tour-ha-long-2n1d-du-thuyen': `${API_BASE}/uploads/tours/thumb/ha-long.jpg`,
-        'tour-sapa-3n2d-fansipan': `${API_BASE}/uploads/tours/thumb/sapa.jpg`,
-        'tour-hoi-an-da-nang-4n3d': `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`
+        default: `${API_BASE}/uploads/tours/phu-quoc.jpg`,
+        'tour-phu-quoc-3n2d-vinwonders': `${API_BASE}/uploads/tours/phu-quoc.jpg`,
+        'tour-da-lat-3n2d-thien-vien': `${API_BASE}/uploads/tours/da-lat.jpg`,
+        'tour-nha-trang-3n3d-4-dao': `${API_BASE}/uploads/tours/nha-trang.jpg`,
+        'tour-ha-long-2n1d-du-thuyen': `${API_BASE}/uploads/tours/ha-long.jpg`,
+        'tour-sapa-3n2d-fansipan': `${API_BASE}/uploads/tours/sapa.jpg`,
+        'tour-hoi-an-da-nang-4n3d': `${API_BASE}/uploads/tours/phu-quoc.jpg`
     }
 };
 

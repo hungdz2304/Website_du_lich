@@ -262,8 +262,9 @@
 
 .tour-footer {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
     padding-top: 15px;
     border-top: 1px solid #f0f0f0;
 }
@@ -271,6 +272,13 @@
 .tour-price {
     display: flex;
     flex-direction: column;
+    gap: 4px;
+}
+
+.price-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .price-label {
@@ -290,6 +298,16 @@
     text-decoration: line-through;
 }
 
+.discount-badge {
+    background: var(--primary-color);
+    color: #fff;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+}
+
 .btn-view-tour {
     padding: 8px 20px;
     background: var(--primary-color);
@@ -302,6 +320,10 @@
 
 .btn-view-tour:hover {
     background: var(--primary-dark);
+}
+.btn-full {
+    width: 100%;
+    text-align: center;
 }
 
 /* Destinations */
