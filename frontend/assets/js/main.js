@@ -4,6 +4,7 @@
 
 // API Configuration
 const API_URL = 'http://localhost:3000/api';
+const API_BASE = API_URL.replace(/\/api$/, '');
 
 // Curated Unsplash fallbacks ensure consistent imagery when DB URLs are missing
 const IMAGE_FALLBACKS = {
@@ -19,15 +20,27 @@ const IMAGE_FALLBACKS = {
         'quy-nhon': 'https://images.unsplash.com/photo-1526779259212-939e64782fd0?auto=format&fit=crop&w=900&q=60'
     },
     tour: {
-        default: 'https://images.unsplash.com/photo-1526779259212-939e64782fd0?auto=format&fit=crop&w=900&q=60',
-        'tour-phu-quoc-3n2d-vinwonders': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=60',
-        'tour-da-lat-3n2d-thien-vien': 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=60',
-        'tour-nha-trang-3n3d-4-dao': 'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=60',
-        'tour-ha-long-2n1d-du-thuyen': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=60',
-        'tour-sapa-3n2d-fansipan': 'https://images.unsplash.com/photo-1500631195312-e3a9d1e4c8b7?auto=format&fit=crop&w=900&q=60',
-        'tour-hoi-an-da-nang-4n3d': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=60'
+        default: `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`,
+        'tour-phu-quoc-3n2d-vinwonders': `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`,
+        'tour-da-lat-3n2d-thien-vien': `${API_BASE}/uploads/tours/thumb/da-lat.jpg`,
+        'tour-nha-trang-3n3d-4-dao': `${API_BASE}/uploads/tours/thumb/nha-trang.jpg`,
+        'tour-ha-long-2n1d-du-thuyen': `${API_BASE}/uploads/tours/thumb/ha-long.jpg`,
+        'tour-sapa-3n2d-fansipan': `${API_BASE}/uploads/tours/thumb/sapa.jpg`,
+        'tour-hoi-an-da-nang-4n3d': `${API_BASE}/uploads/tours/thumb/phu-quoc.jpg`
     }
 };
+
+function normalizeMediaPath(url) {
+    if (!url) return '';
+    let normalized = url.replace(/\\/g, '/');
+    if (normalized.startsWith('/uploads')) {
+        return `${API_BASE}${normalized}`;
+    }
+    if (normalized.startsWith('uploads')) {
+        return `${API_BASE}/${normalized}`;
+    }
+    return normalized;
+}
 
 function resolveDestinationSlug(target) {
     if (!target) return null;
@@ -60,7 +73,11 @@ function getTourImage(target) {
     }
 
     if (typeof target === 'object' && target.cover_image_url) {
-        return target.cover_image_url;
+        const url = target.cover_image_url;
+        // Bỏ placeholder example.com, ưu tiên ảnh local và thêm host nếu cần
+        if (!/example\.com/i.test(url)) {
+            return normalizeMediaPath(url);
+        }
     }
 
     const tourSlug = resolveTourSlug(target);
@@ -300,5 +317,6 @@ window.TourBooking = {
     getQueryParam,
     setQueryParam,
     getDestinationImage,
-    getTourImage
+    getTourImage,
+    normalizeMediaPath
 };

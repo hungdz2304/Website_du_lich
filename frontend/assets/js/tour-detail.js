@@ -125,7 +125,8 @@ function renderTourInfo(data) {
     const thumbnails = getElement('thumbnailImages');
     if (thumbnails) {
         const fallbackGalleryImage = typeof getTourImage === 'function' ? getTourImage() : 'https://via.placeholder.com/900x500';
-        state.galleryImages = [heroImage, ...(gallery || [])].filter(Boolean);
+        const normalizeMediaPath = window.TourBooking?.normalizeMediaPath || (v => v);
+        state.galleryImages = [heroImage, ...(gallery || []).map(normalizeMediaPath)].filter(Boolean);
         if (state.galleryImages.length === 0) {
             state.galleryImages.push(fallbackGalleryImage);
         }
