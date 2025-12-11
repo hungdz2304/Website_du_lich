@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="../../assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="admin-layout">
@@ -93,6 +94,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Charts -->
+            <section class="admin-section">
+                <div class="section-header">
+                    <h2>Biểu đồ</h2>
+                    <div class="chart-controls">
+                        <label for="chartType">Loại:</label>
+                        <select id="chartType">
+                            <option value="line">Đường</option>
+                            <option value="area">Miền</option>
+                            <option value="pie">Tròn</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="adminChart" height="120"></canvas>
+                </div>
+            </section>
 
             <!-- Recent Bookings -->
             <section class="admin-section">
