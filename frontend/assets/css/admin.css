@@ -370,6 +370,248 @@
     background: #7f8c8d;
 }
 
+/* ========== Admin Toolbar ========== */
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5f7fa;
+    border-radius: 8px;
+    padding: 8px 15px;
+    flex: 1;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.search-box i {
+    color: #888;
+}
+
+.search-box input {
+    border: none;
+    background: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+}
+
+.search-box .btn-clear {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.search-box .btn-clear:hover {
+    color: #e74c3c;
+}
+
+.filter-group {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    cursor: pointer;
+    min-width: 150px;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.toolbar-stats {
+    margin-left: auto;
+    color: #666;
+    font-size: 14px;
+}
+
+/* ========== Admin Modal ========== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-content.modal-lg {
+    max-width: 700px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.modal-header h2 {
+    font-size: 18px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header h2 i {
+    color: var(--primary-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #e74c3c;
+}
+
+.modal-body {
+    padding: 25px;
+    overflow-y: auto;
+    max-height: calc(90vh - 80px);
+}
+
+/* Booking Detail in Modal */
+.booking-detail .detail-section {
+    margin-bottom: 25px;
+}
+
+.booking-detail .detail-section:last-child {
+    margin-bottom: 0;
+}
+
+.booking-detail .detail-section h3 {
+    font-size: 15px;
+    color: #333;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.booking-detail .detail-section h3 i {
+    color: var(--primary-color);
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detail-item.full {
+    grid-column: span 2;
+}
+
+.detail-item .label {
+    font-size: 12px;
+    color: #888;
+}
+
+.detail-item .value {
+    font-size: 14px;
+    color: #333;
+}
+
+.detail-item .value.price {
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+.special-requests {
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+}
+
+/* Payment Badge */
+.payment-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.payment-badge.payment-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.payment-badge.payment-paid {
+    background: #d4edda;
+    color: #155724;
+}
+
+.payment-badge.payment-refunded {
+    background: #cce5ff;
+    color: #004085;
+}
+
+/* Booking Reference Style */
+.booking-ref {
+    font-family: monospace;
+    background: #f0f0f0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .admin-sidebar {
@@ -388,5 +630,31 @@
     
     .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .filter-group {
+        flex-wrap: wrap;
+    }
+
+    .toolbar-stats {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-item.full {
+        grid-column: span 1;
     }
 }

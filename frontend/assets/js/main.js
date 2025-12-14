@@ -17,7 +17,19 @@ const IMAGE_FALLBACKS = {
         'sapa': 'https://images.unsplash.com/photo-1500631195312-e3a9d1e4c8b7?auto=format&fit=crop&w=900&q=60',
         'hoi-an': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=60',
         'da-nang': 'https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=900&q=60',
-        'quy-nhon': 'https://images.unsplash.com/photo-1526779259212-939e64782fd0?auto=format&fit=crop&w=900&q=60'
+        'quy-nhon': 'https://images.unsplash.com/photo-1526779259212-939e64782fd0?auto=format&fit=crop&w=900&q=60',
+        // Southeast Asia
+        'bangkok': 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=900&q=60',
+        'singapore': 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=900&q=60',
+        'bali': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=60',
+        'kuala-lumpur': 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=60',
+        'boracay': 'https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?auto=format&fit=crop&w=900&q=60',
+        // Europe
+        'paris': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=60',
+        'rome': 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=900&q=60',
+        'barcelona': 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=900&q=60',
+        'amsterdam': 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=900&q=60',
+        'prague': 'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=900&q=60'
     },
     tour: {
         default: `${API_BASE}/uploads/tours/phu-quoc.jpg`,
@@ -26,7 +38,18 @@ const IMAGE_FALLBACKS = {
         'tour-nha-trang-3n3d-4-dao': `${API_BASE}/uploads/tours/nha-trang.jpg`,
         'tour-ha-long-2n1d-du-thuyen': `${API_BASE}/uploads/tours/ha-long.jpg`,
         'tour-sapa-3n2d-fansipan': `${API_BASE}/uploads/tours/sapa.jpg`,
-        'tour-hoi-an-da-nang-4n3d': `${API_BASE}/uploads/tours/phu-quoc.jpg`
+        'tour-hoi-an-da-nang-4n3d': `${API_BASE}/uploads/tours/phu-quoc.jpg`,
+        'tour-bangkok-pattaya-5n4d': 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=1200&q=80',
+        'tour-singapore-4n3d': 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=1200&q=80',
+        'tour-bali-5n4d': 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=80',
+        'tour-kuala-lumpur-4n3d': 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=1200&q=80',
+        'tour-boracay-manila-5n4d': 'https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?auto=format&fit=crop&w=1200&q=80',
+        // Europe tours
+        'tour-paris-6n5d': 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80',
+        'tour-italy-7n6d': 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1200&q=80',
+        'tour-spain-6n5d': 'https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=1200&q=80',
+        'tour-netherlands-belgium-5n4d': 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=1200&q=80',
+        'tour-eastern-europe-7n6d': 'https://images.unsplash.com/photo-1541849546-216549ae216d?auto=format&fit=crop&w=1200&q=80'
     }
 };
 

@@ -13,6 +13,20 @@
     <!-- Header & Navigation -->
     <header class="header">
         <div class="container">
+            <!-- Top Bar with Hotline -->
+            <div class="header-topbar">
+                <div class="topbar-left">
+                    <span><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</span>
+                    <span><i class="fas fa-envelope"></i> info@dulichvn.com</span>
+                </div>
+                <div class="topbar-right">
+                    <a href="tel:19001234" class="hotline-link">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Hotline: <strong>1900 1234</strong></span>
+                    </a>
+                </div>
+            </div>
+            
             <div class="header-top">
                 <div class="logo">
                     <a href="index.html">
@@ -24,7 +38,21 @@
                 <nav class="main-nav">
                     <ul>
                         <li><a href="index.html" class="active">Trang chủ</a></li>
-                        <li><a href="tour-list.html">Tours</a></li>
+                        <li class="has-dropdown">
+                            <a href="tour-list.html">Tours <i class="fas fa-chevron-down"></i></a>
+                            <div class="mega-dropdown">
+                                <div class="mega-col">
+                                    <h4>Tour Trong Nước</h4>
+                                    <a href="tour-list.html?scope=domestic">Tất cả tour trong nước</a>
+                                </div>
+                                <div class="mega-col">
+                                    <h4>Tour Nước Ngoài</h4>
+                                    <a href="tour-list.html?scope=international&region=asia">Châu Á</a>
+                                    <a href="tour-list.html?scope=international&region=europe">Châu Âu</a>
+                                    <a href="tour-list.html?scope=international&region=america">Châu Mỹ</a>
+                                </div>
+                            </div>
+                        </li>
                         <li><a href="#destinations">Điểm đến</a></li>
                         <li><a href="#contact">Liên hệ</a></li>
                     </ul>
@@ -62,20 +90,45 @@
                 <!-- Search Bar (iVivu style) -->
                 <div class="search-box">
                     <div class="search-tabs">
-                        <button class="search-tab active">
+                        <button class="search-tab active" data-search-scope="domestic">
                             <i class="fas fa-map-marked-alt"></i>
                             Tour trong nước
+                        </button>
+                        <button class="search-tab" data-search-scope="international">
+                            <i class="fas fa-globe-asia"></i>
+                            Tour ngoài nước
                         </button>
                     </div>
                     
                     <form class="search-form" id="searchForm">
                         <div class="search-inputs">
-                            <div class="search-input-group">
+                            <div class="search-input-group search-keyword">
                                 <i class="fas fa-search"></i>
                                 <input type="text" 
                                        id="searchKeyword" 
                                        placeholder="Bạn muốn đi đâu?" 
                                        class="search-input">
+                            </div>
+                            
+                            <div class="search-input-group">
+                                <i class="fas fa-calendar-alt"></i>
+                                <input type="text" 
+                                       id="searchDepartureDate" 
+                                       placeholder="Ngày khởi hành" 
+                                       class="search-input datepicker"
+                                       readonly>
+                                <span class="date-clear" id="dateClear" style="display:none;">&times;</span>
+                            </div>
+                            
+                            <div class="search-input-group">
+                                <i class="fas fa-plane-departure"></i>
+                                <select id="searchDeparture" class="search-select">
+                                    <option value="">Khởi hành từ</option>
+                                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                    <option value="Hà Nội">Hà Nội</option>
+                                    <option value="Đà Nẵng">Đà Nẵng</option>
+                                    <option value="Cần Thơ">Cần Thơ</option>
+                                </select>
                             </div>
                             
                             <div class="search-input-group">
@@ -96,6 +149,87 @@
         </div>
     </section>
 
+    <!-- Stats Bar (iVivu style) -->
+    <section class="stats-bar">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="500">500+</span>
+                        <span class="stat-label">Tours chất lượng</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-star"></i>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="10000">10K+</span>
+                        <span class="stat-label">Đánh giá 5 sao</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-percent"></i>
+                    <div class="stat-content">
+                        <span class="stat-number" data-count="100">100+</span>
+                        <span class="stat-label">Ưu đãi mỗi ngày</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-content">
+                        <span class="stat-number" id="recentBookings">14</span>
+                        <span class="stat-label">Khách đặt trong 24h</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flash Sale Section với Countdown -->
+    <section class="section flash-sale-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt"></i>
+                        Tour Ưu Đãi Tốt Nhất Hôm Nay
+                    </h2>
+                    <p class="section-subtitle">Nhanh Tay Đặt Ngay. Để Mai Sẽ Lỡ!</p>
+                </div>
+                <div class="countdown-timer" id="flashSaleCountdown">
+                    <div class="countdown-label">Kết thúc sau:</div>
+                    <div class="countdown-boxes">
+                        <div class="countdown-box">
+                            <span class="countdown-value" id="countdownHours">00</span>
+                            <span class="countdown-unit">Giờ</span>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-box">
+                            <span class="countdown-value" id="countdownMinutes">00</span>
+                            <span class="countdown-unit">Phút</span>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-box">
+                            <span class="countdown-value" id="countdownSeconds">00</span>
+                            <span class="countdown-unit">Giây</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="tour-list.html?sort=discount" class="btn-view-all">
+                    Xem tất cả <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="loading" id="loadingFlashSale">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+
+            <div class="tours-grid tours-grid-scroll" id="flashSaleToursGrid">
+                <!-- Flash sale tours will be loaded here -->
+            </div>
+        </div>
+    </section>
+
     <!-- Featured Tours Section -->
     <section class="section featured-tours">
         <div class="container">
@@ -104,6 +238,16 @@
                     <i class="fas fa-star"></i>
                     Tour Nổi Bật
                 </h2>
+                <div class="search-tabs" style="margin-left: auto;">
+                    <button class="search-tab active" id="btnFeaturedDomestic">
+                        <i class="fas fa-map-marked-alt"></i>
+                        Trong nước
+                    </button>
+                    <button class="search-tab" id="btnFeaturedInternational">
+                        <i class="fas fa-globe-asia"></i>
+                        Ngoài nước
+                    </button>
+                </div>
                 <a href="tour-list.html" class="btn-view-all">
                     Xem tất cả <i class="fas fa-arrow-right"></i>
                 </a>
@@ -119,6 +263,50 @@
         </div>
     </section>
 
+    <!-- Regional Tours Section (Asia, Europe...) -->
+    <section class="section regional-tours-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2 class="section-title">
+                        <i class="fas fa-globe-asia"></i>
+                        Tour Theo Khu Vực
+                    </h2>
+                    <p class="section-subtitle">Khám phá thế giới theo vùng miền</p>
+                </div>
+            </div>
+            
+            <div class="regional-tabs">
+                <button class="regional-tab active" data-region="asia">
+                    <i class="fas fa-torii-gate"></i> Châu Á
+                </button>
+                <button class="regional-tab" data-region="europe">
+                    <i class="fas fa-chess-rook"></i> Châu Âu
+                </button>
+                <button class="regional-tab" data-region="america">
+                    <i class="fas fa-flag-usa"></i> Châu Mỹ
+                </button>
+                <button class="regional-tab" data-region="domestic">
+                    <i class="fas fa-map-marked-alt"></i> Việt Nam
+                </button>
+            </div>
+            
+            <div class="loading" id="loadingRegional">
+                <i class="fas fa-spinner fa-spin"></i> Đang tải...
+            </div>
+            
+            <div class="tours-grid tours-grid-scroll" id="regionalToursGrid">
+                <!-- Regional tours will be loaded here -->
+            </div>
+            
+            <div class="text-center" style="margin-top: 20px;">
+                <a href="tour-list.html?scope=international" class="btn-view-all-outline">
+                    Xem tất cả tour quốc tế <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
     <!-- Top Destinations Section -->
     <section class="section destinations" id="destinations">
         <div class="container">
@@ -127,6 +315,7 @@
                     <i class="fas fa-map-marked-alt"></i>
                     Điểm Đến Hàng Đầu
                 </h2>
+                <p class="section-subtitle">Bao La Thế Giới, Bốn Bể Là Nhà</p>
             </div>
 
             <div class="loading" id="loadingDestinations">
@@ -138,6 +327,8 @@
             </div>
         </div>
     </section>
+
+
 
     <!-- Why Choose Us Section -->
     <section class="section why-choose-us">
@@ -229,6 +420,32 @@
             </div>
         </div>
     </footer>
+
+    <!-- Floating Contact Buttons (iVivu Style) -->
+    <div class="floating-contacts">
+        <div class="floating-hotline">
+            <a href="tel:19001234" class="hotline-btn">
+                <i class="fas fa-phone-alt"></i>
+                <span>1900 1234</span>
+            </a>
+        </div>
+        <div class="floating-buttons">
+            <a href="https://zalo.me/0123456789" target="_blank" class="float-btn zalo" title="Chat Zalo">
+                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo-Arc.png" alt="Zalo">
+            </a>
+            <a href="https://m.me/dulichvn" target="_blank" class="float-btn messenger" title="Chat Messenger">
+                <i class="fab fa-facebook-messenger"></i>
+            </a>
+            <button class="float-btn scroll-top" id="scrollTopBtn" title="Lên đầu trang">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Date Picker Library -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
 
     <!-- JavaScript -->
     <script src="../assets/js/main.js"></script>

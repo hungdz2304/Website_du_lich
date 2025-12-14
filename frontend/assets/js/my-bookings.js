@@ -10,18 +10,23 @@
 
     const bookingsState = {
         filterStatus: '',
-        items: []
+        searchTerm: '',
+        items: [],
+        allItems: []
     };
 
-    const ONLINE_PAYMENT_METHODS = ['bank_card', 'momo', 'apple_pay'];
+    const ONLINE_PAYMENT_METHODS = ['bank_card', 'momo', 'zalopay', 'vnpay', 'credit_card'];
 
     const paymentMethodLabels = {
-        bank_card: 'Thẻ ngân hàng',
-        bank_transfer: 'Chuyển khoản',
-        momo: 'MoMo',
-        apple_pay: 'Apple Pay',
+        momo: 'Ví MoMo',
+        zalopay: 'Ví ZaloPay',
+        vnpay: 'Ví VNPay',
+        bank_card: 'Thẻ ATM nội địa',
+        credit_card: 'Thẻ Visa/Master',
+        bank_transfer: 'Chuyển khoản ngân hàng',
+        pay_later: 'Thanh toán tại văn phòng',
+        installment: 'Trả góp 0%',
         cash: 'Tiền mặt',
-        credit_card: 'Thẻ tín dụng',
         other: 'Khác'
     };
 
@@ -33,6 +38,13 @@
         cancelled: 'Hủy thanh toán'
     };
 
+    const statusLabels = {
+        pending: 'Chờ xác nhận',
+        confirmed: 'Đã xác nhận',
+        completed: 'Hoàn thành',
+        cancelled: 'Đã hủy'
+    };
+
     function getElement(id) {
         return document.getElementById(id);
     }
@@ -41,11 +53,46 @@
         switch (status) {
             case 'confirmed':
                 return 'status-confirmed';
+            case 'completed':
+                return 'status-completed';
             case 'cancelled':
                 return 'status-cancelled';
             default:
                 return 'status-pending';
         }
+    }
+
+    function getStatusIcon(status) {
+        switch (status) {
+            case 'confirmed':
+                return 'fa-check-circle';
+            case 'completed':
+                return 'fa-trophy';
+            case 'cancelled':
+                return 'fa-times-circle';
+            default:
+                return 'fa-clock';
+        }
+    }
+
+    function updateStats() {
+        const items = bookingsState.allItems;
+        
+        const pendingCount = items.filter(b => b.status === 'pending').length;
+        const confirmedCount = items.filter(b => b.status === 'confirmed').length;
+        const completedCount = items.filter(b => b.status === 'completed').length;
+        const totalCount = items.length;
+
+        // Update stat cards
+        const pendingEl = getElement('statPending');
+        const confirmedEl = getElement('statConfirmed');
+        const completedEl = getElement('statCompleted');
+        const totalEl = getElement('statTotal');
+
+        if (pendingEl) pendingEl.textContent = pendingCount;
+        if (confirmedEl) confirmedEl.textContent = confirmedCount;
+        if (completedEl) completedEl.textContent = completedCount;
+        if (totalEl) totalEl.textContent = totalCount;
     }
 
     async function loadBookings() {
@@ -55,16 +102,60 @@
         if (empty) empty.style.display = 'none';
 
         try {
-            const params = bookingsState.filterStatus ? `?status=${bookingsState.filterStatus}` : '';
-            const res = await apiRequest(`/bookings/my-history${params}`);
+            // Load all bookings first for stats
+            const res = await apiRequest(`/bookings/my-history`);
             if (!res.success) return;
-            bookingsState.items = res.data || [];
-            renderBookings(bookingsState.items);
+            
+            bookingsState.allItems = res.data || [];
+            updateStats();
+
+            // Apply filters
+            applyFilters();
         } catch (error) {
             console.error('loadBookings error:', error);
             showToast('Không thể tải lịch sử đặt tour', 'error');
         } finally {
             if (loading) loading.style.display = 'none';
+        }
+    }
+
+    function applyFilters() {
+        let filtered = bookingsState.allItems;
+
+        // Apply status filter
+        if (bookingsState.filterStatus) {
+            filtered = filtered.filter(b => b.status === bookingsState.filterStatus);
+        }
+
+        // Apply search filter
+        if (bookingsState.searchTerm) {
+            const term = bookingsState.searchTerm.toLowerCase();
+            filtered = filtered.filter(b => 
+                b.booking_reference?.toLowerCase().includes(term) ||
+                b.tour_title?.toLowerCase().includes(term) ||
+                b.destination_name?.toLowerCase().includes(term)
+            );
+        }
+
+        bookingsState.items = filtered;
+        renderBookings(filtered);
+
+        // Update search result count
+        const resultCountEl = getElement('searchResultCount');
+        const countEl = getElement('resultCount');
+        if (resultCountEl && countEl) {
+            if (bookingsState.searchTerm) {
+                resultCountEl.style.display = 'block';
+                countEl.textContent = filtered.length;
+            } else {
+                resultCountEl.style.display = 'none';
+            }
+        }
+
+        // Show/hide clear button
+        const clearBtn = getElement('btnClearSearch');
+        if (clearBtn) {
+            clearBtn.style.display = bookingsState.searchTerm ? 'block' : 'none';
         }
     }
 
@@ -83,71 +174,139 @@
         list.innerHTML = bookings
             .map(booking => {
                 const allowCancel = ['pending', 'confirmed'].includes(booking.status);
-                const allowPay = booking.payment_status !== 'paid' && booking.status !== 'cancelled';
-                const paymentLabel = paymentStatusLabels[booking.payment_status] || 'Không rõ';
-                const paymentMethodLabel = paymentMethodLabels[booking.payment_method] || '---';
+                const allowReview = booking.status === 'completed';
+                const statusLabel = statusLabels[booking.status] || booking.status;
+                const statusIcon = getStatusIcon(booking.status);
 
                 return `
                     <article class="booking-card" data-booking-id="${booking.booking_id}">
-                        <header>
-                            <div>
-                                <p class="booking-ref">Mã đặt chỗ: ${booking.booking_reference}</p>
-                                <small>${formatDateTime(booking.booking_date)}</small>
+                        <div class="booking-card-header">
+                            <div class="booking-ref">
+                                <i class="fas fa-ticket-alt"></i>
+                                <strong>${booking.booking_reference}</strong>
+                                <span class="booking-date">• ${formatDateTime(booking.booking_date)}</span>
                             </div>
-                            <span class="status-badge ${getStatusClass(booking.status)}">${booking.status}</span>
-                        </header>
-                        <div class="booking-body">
-                            <div class="booking-info">
-                                <h3>${booking.tour_title || 'Tour'}</h3>
-                                <ul>
-                                    <li><span>Điểm đến</span><strong>${booking.destination_name || '-'}</strong></li>
-                                    <li><span>Ngày đi</span><strong>${booking.departure_date ? formatDate(booking.departure_date) : 'Tự chọn'}</strong></li>
-                                    <li><span>Hành khách</span><strong>${booking.num_adults} NL${booking.num_children ? `, ${booking.num_children} TE` : ''}</strong></li>
-                                    <li><span>Thanh toán</span><strong>${paymentLabel} - ${paymentMethodLabel}</strong></li>
-                                    <li><span>Tổng tiền</span><strong>${formatPrice(booking.total_price || 0)}</strong></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <img src="${booking.tour_image || 'https://via.placeholder.com/400x250'}" alt="${booking.tour_title}" onerror="this.src='https://via.placeholder.com/400x250'">
-                            </div>
+                            <span class="status-badge ${getStatusClass(booking.status)}">
+                                <i class="fas ${statusIcon}"></i> ${statusLabel}
+                            </span>
                         </div>
-                        <div class="booking-actions">
-                            <button type="button" data-ref="${booking.booking_reference}" class="btn-copy-ref">
-                                <i class="fas fa-copy"></i> Sao chép mã
-                            </button>
-                            ${allowCancel ? `<button type="button" class="btn-cancel-booking" data-id="${booking.booking_id}">Huỷ tour</button>` : ''}
-                        </div>
-                        ${allowPay ? `
-                            <div class="payment-inline">
-                                <label>Thanh toán online:</label>
-                                <div class="payment-inline-controls">
-                                    <select class="payment-method-select">
-                                        ${ONLINE_PAYMENT_METHODS.map(method => `
-                                            <option value="${method}" ${booking.payment_method === method ? 'selected' : ''}>${paymentMethodLabels[method]}</option>
-                                        `).join('')}
-                                    </select>
-                                    <button type="button" class="btn-pay-booking" data-id="${booking.booking_id}">Thanh toán</button>
+                        
+                        <div class="booking-card-body">
+                            <div class="booking-image">
+                                <img src="${booking.tour_image || 'https://via.placeholder.com/400x250'}" 
+                                     alt="${booking.tour_title}" 
+                                     onerror="this.src='https://via.placeholder.com/400x250'">
+                            </div>
+                            <div class="booking-details">
+                                <h3 class="booking-tour-title">${booking.tour_title || 'Tour'}</h3>
+                                <div class="booking-info-grid">
+                                    <div class="booking-info-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>${booking.destination_name || '-'}</span>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>${booking.departure_date ? formatDate(booking.departure_date) : 'Tự chọn'}</span>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <i class="fas fa-users"></i>
+                                        <span>${booking.num_adults} Người lớn${booking.num_children ? `, ${booking.num_children} Trẻ em` : ''}</span>
+                                    </div>
+                                    <div class="booking-info-item">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>${paymentStatusLabels[booking.payment_status] || 'Chưa TT'}</span>
+                                    </div>
+                                </div>
+                                <div class="booking-total">
+                                    <span class="booking-total-label">Tổng tiền:</span>
+                                    <span class="booking-total-amount">${formatPrice(booking.total_price || 0)}</span>
                                 </div>
                             </div>
-                        ` : ''}
+                        </div>
+                        
+                        <div class="booking-card-footer">
+                            <button type="button" data-ref="${booking.booking_reference}" class="btn-booking-action btn-view-detail">
+                                <i class="fas fa-copy"></i> Sao chép mã
+                            </button>
+                            ${allowReview ? `
+                                <a href="tour-detail.html?id=${booking.tour_id}#reviews" class="btn-booking-action btn-review">
+                                    <i class="fas fa-star"></i> Đánh giá
+                                </a>
+                            ` : ''}
+                            ${allowCancel ? `
+                                <button type="button" class="btn-booking-action btn-cancel" data-id="${booking.booking_id}">
+                                    <i class="fas fa-times"></i> Hủy tour
+                                </button>
+                            ` : ''}
+                        </div>
                     </article>
                 `;
             })
             .join('');
     }
 
+    function initFilterTabs() {
+        const tabs = document.querySelectorAll('.filter-tab');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active state
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update filter status
+                bookingsState.filterStatus = tab.dataset.status || '';
+                
+                // Apply all filters
+                applyFilters();
+            });
+        });
+    }
+
+    function initSearch() {
+        const searchInput = getElement('searchBooking');
+        const clearBtn = getElement('btnClearSearch');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', debounce((e) => {
+                bookingsState.searchTerm = e.target.value.trim();
+                applyFilters();
+            }, 300));
+
+            // Enter key to search
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    bookingsState.searchTerm = searchInput.value.trim();
+                    applyFilters();
+                }
+            });
+        }
+
+        if (clearBtn) {
+            clearBtn.addEventListener('click', () => {
+                if (searchInput) searchInput.value = '';
+                bookingsState.searchTerm = '';
+                applyFilters();
+            });
+        }
+    }
+
+    // Debounce helper
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
     function bindBookingsEvents() {
-        const statusSelect = getElement('filterStatus');
         const list = getElement('bookingsList');
 
-        statusSelect?.addEventListener('change', event => {
-            bookingsState.filterStatus = event.target.value;
-            loadBookings();
-        });
-
         list?.addEventListener('click', event => {
-            const copyBtn = event.target.closest('.btn-copy-ref');
-            if (copyBtn) {
+            const copyBtn = event.target.closest('[data-ref]');
+            if (copyBtn && copyBtn.classList.contains('btn-view-detail')) {
                 const ref = copyBtn.dataset.ref;
                 navigator.clipboard.writeText(ref).then(() => {
                     showToast('Đã sao chép mã đặt chỗ', 'success');
@@ -155,57 +314,60 @@
                 return;
             }
 
-            const cancelBtn = event.target.closest('.btn-cancel-booking');
+            const cancelBtn = event.target.closest('.btn-cancel');
             if (cancelBtn) {
                 const bookingId = cancelBtn.dataset.id;
                 if (!bookingId) return;
-                const confirmed = window.confirm('Bạn chắc chắn muốn huỷ tour này?');
-                if (!confirmed) return;
-                cancelBooking(bookingId, cancelBtn);
+                
+                // Show confirm dialog
+                showCancelConfirm(bookingId, cancelBtn);
                 return;
             }
-
-            const payBtn = event.target.closest('.btn-pay-booking');
-            if (payBtn) {
-                const bookingCard = payBtn.closest('.booking-card');
-                const select = bookingCard?.querySelector('.payment-method-select');
-                const method = select?.value || 'bank_card';
-                payBooking(payBtn.dataset.id, method, payBtn);
-            }
         });
+    }
+
+    function showCancelConfirm(bookingId, button) {
+        const confirmed = window.confirm('Bạn chắc chắn muốn hủy tour này?\n\nLưu ý: Phí hủy tour có thể được áp dụng theo chính sách của chúng tôi.');
+        if (!confirmed) return;
+        cancelBooking(bookingId, button);
     }
 
     async function cancelBooking(bookingId, button) {
         if (!bookingId) return;
         button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+        
         try {
             await apiRequest(`/bookings/${bookingId}/cancel`, { method: 'PUT' });
-            showToast('Đã huỷ tour thành công', 'success');
+            showToast('Đã hủy tour thành công', 'success');
             loadBookings();
         } catch (error) {
             console.error('cancelBooking error:', error);
-            showToast(error.message || 'Không thể huỷ tour', 'error');
+            showToast(error.message || 'Không thể hủy tour', 'error');
+            button.innerHTML = '<i class="fas fa-times"></i> Hủy tour';
         } finally {
             button.disabled = false;
         }
     }
 
-    async function payBooking(bookingId, method, button) {
-        if (!bookingId) return;
-        button.disabled = true;
-        try {
-            await apiRequest(`/bookings/${bookingId}/pay`, {
-                method: 'POST',
-                body: JSON.stringify({ payment_method: method })
+    function initFloatingButtons() {
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        if (!scrollTopBtn) return;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
             });
-            showToast('Thanh toán thành công', 'success');
-            loadBookings();
-        } catch (error) {
-            console.error('payBooking error:', error);
-            showToast(error.message || 'Không thể thanh toán', 'error');
-        } finally {
-            button.disabled = false;
-        }
+        });
     }
 
     function initBookingsPage() {
@@ -220,8 +382,11 @@
             return;
         }
 
+        initFilterTabs();
+        initSearch();
         bindBookingsEvents();
         loadBookings();
+        initFloatingButtons();
     }
 
     document.addEventListener('DOMContentLoaded', initBookingsPage);

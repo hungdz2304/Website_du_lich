@@ -7,11 +7,27 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/tour-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
-    <!-- Header (same as homepage) -->
+    <!-- Header with Topbar -->
     <header class="header">
         <div class="container">
+            <!-- Top Bar with Hotline -->
+            <div class="header-topbar">
+                <div class="topbar-left">
+                    <span><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</span>
+                    <span><i class="fas fa-envelope"></i> info@dulichvn.com</span>
+                </div>
+                <div class="topbar-right">
+                    <a href="tel:19001234" class="hotline-link">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Hotline: <strong>1900 1234</strong></span>
+                    </a>
+                </div>
+            </div>
+            
             <div class="header-top">
                 <div class="logo">
                     <a href="index.html">
@@ -41,6 +57,7 @@
                         </button>
                         <div class="user-dropdown" id="userDropdown" style="display: none;">
                             <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
                             <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
                     </div>
@@ -76,11 +93,31 @@
                         <!-- Tour Title -->
                         <h1 class="tour-title" id="tourTitle"></h1>
 
+                        <!-- Social Proof Banner -->
+                        <div class="social-proof-banner" id="socialProofBanner">
+                            <div class="proof-item">
+                                <i class="fas fa-fire"></i>
+                                <span><strong id="bookingsToday">12</strong> khách đặt hôm nay</span>
+                            </div>
+                            <div class="proof-item">
+                                <i class="fas fa-eye"></i>
+                                <span><strong id="viewsNow">45</strong> người đang xem</span>
+                            </div>
+                            <div class="proof-item guarantee">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Đảm bảo giá tốt nhất</span>
+                            </div>
+                        </div>
+
                         <div class="tour-meta">
                             <div class="tour-rating" id="tourRating">
                                 <i class="fas fa-star"></i>
                                 <span class="rating-score">0</span>
                                 <span class="rating-count">(0 đánh giá)</span>
+                            </div>
+                            <div class="tour-departure" id="tourDepartureFrom">
+                                <i class="fas fa-map-pin"></i>
+                                <span>Khởi hành: TP. Hồ Chí Minh</span>
                             </div>
                             <div class="tour-location" id="tourLocation">
                                 <i class="fas fa-map-marker-alt"></i>
@@ -196,6 +233,12 @@
                     <!-- RIGHT COLUMN: Booking Box -->
                     <div class="tour-detail-right">
                         <div class="booking-box sticky">
+                            <!-- Urgency Banner -->
+                            <div class="urgency-banner" id="urgencyBanner">
+                                <i class="fas fa-bolt"></i>
+                                <span>Chỉ còn <strong id="seatsLeft">5</strong> chỗ với giá này!</span>
+                            </div>
+                            
                             <div class="booking-price">
                                 <span class="price-label">Giá từ</span>
                                 <div class="price-wrapper">
@@ -205,6 +248,22 @@
                                 <div class="original-price" id="originalPrice" style="display: none;">
                                     <span class="original-amount"></span>
                                     <span class="discount-badge"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Benefits -->
+                            <div class="quick-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-undo"></i>
+                                    <span>Hoàn tiền 100% nếu hủy trước 7 ngày</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-headset"></i>
+                                    <span>Hỗ trợ 24/7</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-credit-card"></i>
+                                    <span>Thanh toán an toàn</span>
                                 </div>
                             </div>
 
@@ -235,17 +294,29 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label><i class="fas fa-credit-card"></i> Phương thức thanh toán</label>
-                                    <select id="paymentMethod" class="form-select">
-                                        <option value="bank_card">Thẻ ngân hàng</option>
-                                        <option value="momo">MoMo</option>
-                                        <option value="apple_pay">Apple Pay</option>
-                                        <option value="bank_transfer">Chuyển khoản ngân hàng</option>
-                                    </select>
+                                    <label><i class="fas fa-baby"></i> Em bé (< 2 tuổi)</label>
+                                    <div class="number-input">
+                                        <button type="button" class="btn-minus" data-target="numInfants">-</button>
+                                        <input type="number" id="numInfants" min="0" value="0" readonly>
+                                        <button type="button" class="btn-plus" data-target="numInfants">+</button>
+                                    </div>
                                 </div>
 
                                 <div class="price-summary">
-                                    <div class="summary-row">
+                                    <div class="summary-row" id="adultPriceRow">
+                                        <span>Người lớn x <span id="adultCount">1</span></span>
+                                        <span id="adultTotal">0đ</span>
+                                    </div>
+                                    <div class="summary-row" id="childPriceRow" style="display: none;">
+                                        <span>Trẻ em x <span id="childCount">0</span></span>
+                                        <span id="childTotal">0đ</span>
+                                    </div>
+                                    <div class="summary-row" id="infantPriceRow" style="display: none;">
+                                        <span>Em bé x <span id="infantCount">0</span></span>
+                                        <span id="infantTotal">0đ</span>
+                                    </div>
+                                    <div class="summary-divider"></div>
+                                    <div class="summary-row total-row">
                                         <span>Tổng cộng:</span>
                                         <span class="total-price" id="totalPrice">0đ</span>
                                     </div>
@@ -259,8 +330,11 @@
 
                             <div class="contact-info">
                                 <h3><i class="fas fa-phone-alt"></i> Liên Hệ Tư Vấn</h3>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <div>
                                         <strong>Hotline:</strong>
-                                        <a href="tel:1900 1234">1900 1234</a>
+                                        <a href="tel:19001234">1900 1234</a>
                                     </div>
                                 </div>
                                 <div class="contact-item">
@@ -270,6 +344,21 @@
                                         <a href="mailto:info@dulichvn.com">info@dulichvn.com</a>
                                     </div>
                                 </div>
+                                <div class="contact-item">
+                                    <i class="fab fa-facebook-messenger"></i>
+                                    <div>
+                                        <strong>Chat:</strong>
+                                        <a href="#" onclick="window.open('https://m.me/dulichvn', '_blank')">Messenger</a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Trust Badges -->
+                            <div class="trust-badges">
+                                <img src="https://cdn-icons-png.flaticon.com/128/6124/6124998.png" alt="Secure Payment" title="Thanh toán an toàn">
+                                <img src="https://cdn-icons-png.flaticon.com/128/5968/5968299.png" alt="Visa" title="Visa">
+                                <img src="https://cdn-icons-png.flaticon.com/128/349/349228.png" alt="Mastercard" title="Mastercard">
+                                <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo" title="MoMo">
                             </div>
                         </div>
                     </div>
@@ -370,19 +459,316 @@
         </div>
     </div>
 
-    <!-- Footer (same as homepage) -->
+    <!-- Floating Contact Buttons (iVivu Style) -->
+    <div class="floating-contacts">
+        <div class="floating-hotline">
+            <a href="tel:19001234" class="hotline-btn">
+                <i class="fas fa-phone-alt"></i>
+                <span>1900 1234</span>
+            </a>
+        </div>
+        <div class="floating-buttons">
+            <a href="https://zalo.me/0123456789" target="_blank" class="float-btn zalo" title="Chat Zalo">
+                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo-Arc.png" alt="Zalo">
+            </a>
+            <a href="https://m.me/dulichvn" target="_blank" class="float-btn messenger" title="Chat Messenger">
+                <i class="fab fa-facebook-messenger"></i>
+            </a>
+            <button class="float-btn scroll-top" id="scrollTopBtn" title="Lên đầu trang">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-modal-overlay"></div>
+        <div class="payment-modal-content">
+            <button class="payment-modal-close" id="closePaymentModal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="payment-modal-header">
+                <h2><i class="fas fa-credit-card"></i> Thanh toán đặt tour</h2>
+                <p>Chọn phương thức thanh toán phù hợp với bạn</p>
+            </div>
+
+            <!-- Payment Steps -->
+            <div class="payment-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Thông tin</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>Thanh toán</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span>Hoàn tất</span>
+                </div>
+            </div>
+
+            <div class="payment-modal-body">
+                <!-- Step 1: Contact Info -->
+                <div class="payment-step-content active" id="paymentStep1">
+                    <h3><i class="fas fa-user"></i> Thông tin liên hệ</h3>
+                    
+                    <div class="contact-form-grid">
+                        <div class="form-group">
+                            <label>Họ và tên <span class="required">*</span></label>
+                            <input type="text" id="contactName" placeholder="Nhập họ và tên" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" id="contactEmail" placeholder="Nhập email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại <span class="required">*</span></label>
+                            <input type="tel" id="contactPhone" placeholder="Nhập số điện thoại" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input type="text" id="contactAddress" placeholder="Nhập địa chỉ (không bắt buộc)">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Yêu cầu đặc biệt</label>
+                        <textarea id="specialRequests" rows="3" placeholder="Nhập yêu cầu đặc biệt (chế độ ăn, phòng đặc biệt...)"></textarea>
+                    </div>
+
+                    <div class="booking-summary-card">
+                        <h4><i class="fas fa-info-circle"></i> Tóm tắt đặt tour</h4>
+                        <div class="summary-details">
+                            <div class="summary-item">
+                                <span>Tour:</span>
+                                <strong id="summaryTourName">-</strong>
+                            </div>
+                            <div class="summary-item">
+                                <span>Ngày khởi hành:</span>
+                                <strong id="summaryDate">-</strong>
+                            </div>
+                            <div class="summary-item">
+                                <span>Số khách:</span>
+                                <strong id="summaryGuests">-</strong>
+                            </div>
+                            <div class="summary-item total">
+                                <span>Tổng tiền:</span>
+                                <strong id="summaryTotal">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-next-step" id="btnToStep2">
+                        Tiếp tục <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Step 2: Payment Method -->
+                <div class="payment-step-content" id="paymentStep2">
+                    <h3><i class="fas fa-wallet"></i> Chọn phương thức thanh toán</h3>
+
+                    <div class="payment-methods">
+                        <!-- E-Wallets -->
+                        <div class="payment-category">
+                            <h4><i class="fas fa-mobile-alt"></i> Ví điện tử</h4>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="momo">
+                                    <div class="payment-option-content">
+                                        <img src="https://upload.wikimedia.org/wikipedia/vi/f/fe/MoMo_Logo.png" alt="MoMo">
+                                        <div class="payment-info">
+                                            <strong>MoMo</strong>
+                                            <span>Thanh toán qua ví MoMo</span>
+                                        </div>
+                                        <span class="payment-badge instant">Xác nhận ngay</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="zalopay">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-ZaloPay-Square.png" alt="ZaloPay">
+                                        <div class="payment-info">
+                                            <strong>ZaloPay</strong>
+                                            <span>Thanh toán qua ví ZaloPay</span>
+                                        </div>
+                                        <span class="payment-badge instant">Xác nhận ngay</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="vnpay">
+                                    <div class="payment-option-content">
+                                        <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/9/06ncktiwd6dc1694418196384.png" alt="VNPay">
+                                        <div class="payment-info">
+                                            <strong>VNPay</strong>
+                                            <span>Thanh toán qua VNPAY-QR</span>
+                                        </div>
+                                        <span class="payment-badge instant">Xác nhận ngay</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Cards -->
+                        <div class="payment-category">
+                            <h4><i class="fas fa-credit-card"></i> Thẻ ngân hàng</h4>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="bank_card">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/349/349221.png" alt="ATM">
+                                        <div class="payment-info">
+                                            <strong>Thẻ ATM nội địa</strong>
+                                            <span>Visa, Mastercard, JCB, Napas</span>
+                                        </div>
+                                        <span class="payment-badge instant">Xác nhận ngay</span>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="credit_card">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/179/179457.png" alt="Credit Card">
+                                        <div class="payment-info">
+                                            <strong>Thẻ tín dụng quốc tế</strong>
+                                            <span>Visa, Mastercard, AMEX</span>
+                                        </div>
+                                        <span class="payment-badge instant">Xác nhận ngay</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Bank Transfer -->
+                        <div class="payment-category">
+                            <h4><i class="fas fa-university"></i> Chuyển khoản</h4>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="bank_transfer">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2830/2830284.png" alt="Bank Transfer">
+                                        <div class="payment-info">
+                                            <strong>Chuyển khoản ngân hàng</strong>
+                                            <span>Chuyển khoản trực tiếp</span>
+                                        </div>
+                                        <span class="payment-badge">Xác nhận trong 24h</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Pay Later -->
+                        <div class="payment-category">
+                            <h4><i class="fas fa-clock"></i> Thanh toán sau</h4>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="pay_later">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/1041/1041888.png" alt="Pay at office">
+                                        <div class="payment-info">
+                                            <strong>Thanh toán tại văn phòng</strong>
+                                            <span>Thanh toán khi đến nhận vé</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="paymentMethod" value="installment">
+                                    <div class="payment-option-content">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2331/2331970.png" alt="Installment">
+                                        <div class="payment-info">
+                                            <strong>Trả góp 0%</strong>
+                                            <span>Trả góp qua thẻ tín dụng</span>
+                                        </div>
+                                        <span class="payment-badge promo">0% lãi suất</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Badges -->
+                    <div class="security-badges">
+                        <div class="badge-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Bảo mật SSL 256-bit</span>
+                        </div>
+                        <div class="badge-item">
+                            <i class="fas fa-lock"></i>
+                            <span>Thanh toán an toàn</span>
+                        </div>
+                        <div class="badge-item">
+                            <i class="fas fa-undo"></i>
+                            <span>Hoàn tiền dễ dàng</span>
+                        </div>
+                    </div>
+
+                    <div class="payment-actions">
+                        <button class="btn-back-step" id="btnBackToStep1">
+                            <i class="fas fa-arrow-left"></i> Quay lại
+                        </button>
+                        <button class="btn-confirm-payment" id="btnConfirmPayment">
+                            <i class="fas fa-check"></i> Xác nhận thanh toán
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Confirmation -->
+                <div class="payment-step-content" id="paymentStep3">
+                    <div class="payment-success">
+                        <div class="success-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Đặt tour thành công!</h3>
+                        <p>Cảm ơn bạn đã đặt tour. Chúng tôi sẽ liên hệ với bạn sớm nhất.</p>
+                        
+                        <div class="booking-confirmation">
+                            <div class="confirmation-item">
+                                <span>Mã đặt tour:</span>
+                                <strong id="confirmBookingRef">-</strong>
+                            </div>
+                            <div class="confirmation-item">
+                                <span>Phương thức thanh toán:</span>
+                                <strong id="confirmPaymentMethod">-</strong>
+                            </div>
+                            <div class="confirmation-item">
+                                <span>Trạng thái:</span>
+                                <strong id="confirmStatus">Đang xử lý</strong>
+                            </div>
+                        </div>
+
+                        <div class="confirmation-note">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Email xác nhận đã được gửi đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư.</p>
+                        </div>
+
+                        <div class="confirmation-actions">
+                            <a href="my-bookings.html" class="btn-view-bookings">
+                                <i class="fas fa-list"></i> Xem đặt chỗ của tôi
+                            </a>
+                            <button class="btn-close-modal" id="btnCloseModal">
+                                <i class="fas fa-home"></i> Tiếp tục mua sắm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
                 <div class="footer-col">
                     <h3>Về Chúng Tôi</h3>
-                    <p>DuLịchVN - Đơn vị cung cấp dịch vụ du lịch uy tín, chuyên nghiệp.</p>
+                    <p>DuLịchVN - Đơn vị cung cấp dịch vụ du lịch uy tín, chuyên nghiệp với hơn 10 năm kinh nghiệm.</p>
                 </div>
                 <div class="footer-col">
                     <h3>Liên Hệ</h3>
                     <ul class="contact-info">
                         <li><i class="fas fa-phone"></i> 1900 1234</li>
                         <li><i class="fas fa-envelope"></i> info@dulichvn.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</li>
                     </ul>
                 </div>
             </div>
@@ -392,6 +778,9 @@
         </div>
     </footer>
 
+    <!-- Date Picker -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
     <script src="../assets/js/main.js"></script>
     <script src="../assets/js/tour-detail.js"></script>
 </body>

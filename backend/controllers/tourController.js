@@ -74,6 +74,8 @@ const tourController = {
             const filters = {
                 destination_id: req.query.destination_id,
                 category_id: req.query.category_id,
+                country: req.query.country,
+                scope: req.query.scope,
                 min_price: req.query.min_price,
                 max_price: req.query.max_price,
                 search: req.query.search,

@@ -19,6 +19,13 @@ router.post('/', authMiddleware, bookingValidation, validate, bookingController.
 router.post('/calculate-price', bookingController.calculatePrice);
 
 /**
+ * @route   POST /api/bookings/lookup
+ * @desc    Public booking lookup by reference + email/phone
+ * @access  Public
+ */
+router.post('/lookup', bookingController.publicBookingLookup);
+
+/**
  * @route   GET /api/bookings/my-history
  * @desc    Get user's booking history
  * @access  Private

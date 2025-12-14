@@ -1,6 +1,20 @@
 const db = require('../config/database');
 
-const INSTANT_PAYMENT_METHODS = new Set(['bank_card', 'momo', 'apple_pay']);
+// Payment methods that are processed instantly (online payments)
+const INSTANT_PAYMENT_METHODS = new Set([
+    'bank_card',      // Thẻ ATM nội địa
+    'momo',           // Ví MoMo
+    'zalopay',        // Ví ZaloPay
+    'vnpay',          // Ví VNPay
+    'credit_card'     // Thẻ quốc tế Visa/Master
+]);
+
+// Payment methods that require manual confirmation
+const OFFLINE_PAYMENT_METHODS = new Set([
+    'bank_transfer',  // Chuyển khoản ngân hàng
+    'pay_later',      // Thanh toán tại văn phòng
+    'installment'     // Trả góp 0%
+]);
 
 const Booking = {
     /**

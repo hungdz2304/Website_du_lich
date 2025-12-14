@@ -291,6 +291,8 @@ const Tour = {
                 t.*,
                 d.name as destination_name,
                 d.slug as destination_slug,
+                d.country as destination_country,
+                d.region as destination_region,
                 ${buildCategorySubquery()} as categories,
                 ${buildCategoryIdsSubquery()} as category_ids
             FROM tours t
@@ -311,6 +313,17 @@ const Tour = {
                 WHERE tc.tour_id = t.tour_id AND tc.category_id = ?
             )`;
             params.push(filters.category_id);
+        }
+
+        if (filters.country) {
+            query += ' AND d.country = ?';
+            params.push(filters.country);
+        } else if (filters.scope === 'domestic') {
+            query += ' AND d.country = ?';
+            params.push('Vietnam');
+        } else if (filters.scope === 'international') {
+            query += ' AND d.country <> ?';
+            params.push('Vietnam');
         }
 
         if (filters.min_price) {
@@ -379,6 +392,7 @@ const Tour = {
         let query = `
             SELECT COUNT(DISTINCT t.tour_id) as total
             FROM tours t
+            LEFT JOIN destinations d ON t.destination_id = d.destination_id
             WHERE t.is_active = TRUE
         `;
 
@@ -395,6 +409,17 @@ const Tour = {
                 WHERE tc.tour_id = t.tour_id AND tc.category_id = ?
             )`;
             params.push(filters.category_id);
+        }
+
+        if (filters.country) {
+            query += ' AND d.country = ?';
+            params.push(filters.country);
+        } else if (filters.scope === 'domestic') {
+            query += ' AND d.country = ?';
+            params.push('Vietnam');
+        } else if (filters.scope === 'international') {
+            query += ' AND d.country <> ?';
+            params.push('Vietnam');
         }
 
         if (filters.min_price) {
@@ -424,6 +449,8 @@ const Tour = {
                 t.*,
                 d.name as destination_name,
                 d.slug as destination_slug,
+                d.country as destination_country,
+                d.region as destination_region,
                 ${buildCategorySubquery()} as categories
             FROM tours t
             LEFT JOIN destinations d ON t.destination_id = d.destination_id
@@ -499,6 +526,9 @@ const Tour = {
             SELECT DISTINCT
                 t.*,
                 d.name as destination_name,
+                d.slug as destination_slug,
+                d.country as destination_country,
+                d.region as destination_region,
                 ${buildCategorySubquery()} as categories
             FROM tours t
             LEFT JOIN destinations d ON t.destination_id = d.destination_id

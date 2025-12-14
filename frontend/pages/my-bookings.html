@@ -11,6 +11,20 @@
 <body>
     <header class="header">
         <div class="container">
+            <!-- Top Bar with Hotline -->
+            <div class="header-topbar">
+                <div class="topbar-left">
+                    <span><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q.1, TP.HCM</span>
+                    <span><i class="fas fa-envelope"></i> info@dulichvn.com</span>
+                </div>
+                <div class="topbar-right">
+                    <a href="tel:19001234" class="hotline-link">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Hotline: <strong>1900 1234</strong></span>
+                    </a>
+                </div>
+            </div>
+            
             <div class="header-top">
                 <div class="logo">
                     <a href="index.html">
@@ -37,7 +51,7 @@
                             <span id="userName"></span>
                         </button>
                         <div class="user-dropdown" id="userDropdown" style="display: none;">
-                            <a href="my-bookings.html"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
+                            <a href="my-bookings.html" class="active"><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</a>
                             <a href="profile.html"><i class="fas fa-user"></i> Hồ sơ</a>
                             <a href="#" id="btnLogout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                         </div>
@@ -49,35 +63,131 @@
 
     <main class="bookings-main">
         <div class="container">
-            <div class="bookings-header">
-                <div>
-                    <h1>Đặt chỗ của tôi</h1>
-                    <p class="text-muted">Theo dõi trạng thái và thông tin chi tiết các tour bạn đã đặt</p>
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-header-content">
+                    <h1><i class="fas fa-ticket-alt"></i> Đặt chỗ của tôi</h1>
+                    <p class="text-muted">Quản lý và theo dõi tất cả các tour bạn đã đặt</p>
                 </div>
-                <div>
-                    <label for="filterStatus">Trạng thái:</label>
-                    <select id="filterStatus">
-                        <option value="">Tất cả</option>
-                        <option value="pending">Chờ xác nhận</option>
-                        <option value="confirmed">Đã xác nhận</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="cancelled">Đã hủy</option>
-                    </select>
+                <a href="tour-list.html" class="btn-explore">
+                    <i class="fas fa-plus"></i> Đặt tour mới
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="booking-stats" id="bookingStats">
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statPending">0</span>
+                        <span class="stat-label">Chờ xác nhận</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon confirmed">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statConfirmed">0</span>
+                        <span class="stat-label">Đã xác nhận</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon completed">
+                        <i class="fas fa-flag-checkered"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statCompleted">0</span>
+                        <span class="stat-label">Hoàn thành</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon total">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="statTotal">0</span>
+                        <span class="stat-label">Tổng đặt chỗ</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Search & Filter Section -->
+            <div class="bookings-toolbar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchBooking" placeholder="Tìm theo mã booking, tên tour, điểm đến...">
+                    <button type="button" id="btnClearSearch" class="btn-clear" style="display:none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-result-count" id="searchResultCount" style="display:none;">
+                    <span id="resultCount">0</span> kết quả
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-status="">
+                    <i class="fas fa-list"></i> Tất cả
+                </button>
+                <button class="filter-tab" data-status="pending">
+                    <i class="fas fa-clock"></i> Chờ xác nhận
+                </button>
+                <button class="filter-tab" data-status="confirmed">
+                    <i class="fas fa-check-circle"></i> Đã xác nhận
+                </button>
+                <button class="filter-tab" data-status="completed">
+                    <i class="fas fa-flag-checkered"></i> Hoàn thành
+                </button>
+                <button class="filter-tab" data-status="cancelled">
+                    <i class="fas fa-times-circle"></i> Đã hủy
+                </button>
+            </div>
+
+            <!-- Loading State -->
             <div class="loading-state" id="loadingBookings" style="display:none;">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>Đang tải dữ liệu...</p>
+                <i class="fas fa-spinner fa-spin fa-2x"></i>
+                <p>Đang tải danh sách đặt chỗ...</p>
             </div>
 
+            <!-- Empty State -->
             <div class="empty-state" id="emptyBookings" style="display:none;">
-                <p>Bạn chưa có đặt chỗ nào. Hãy khám phá và đặt tour ngay!</p>
+                <i class="fas fa-suitcase-rolling"></i>
+                <h3>Chưa có đặt chỗ nào</h3>
+                <p>Bạn chưa đặt tour nào. Hãy khám phá và đặt tour ngay!</p>
+                <a href="tour-list.html" class="btn-primary">
+                    <i class="fas fa-search"></i> Khám phá tour
+                </a>
             </div>
 
+            <!-- Bookings List -->
             <div id="bookingsList"></div>
         </div>
     </main>
+
+    <!-- Floating Contact Buttons (iVivu Style) -->
+    <div class="floating-contacts">
+        <div class="floating-hotline">
+            <a href="tel:19001234" class="hotline-btn">
+                <i class="fas fa-phone-alt"></i>
+                <span>1900 1234</span>
+            </a>
+        </div>
+        <div class="floating-buttons">
+            <a href="https://zalo.me/0123456789" target="_blank" class="float-btn zalo" title="Chat Zalo">
+                <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/01/Logo-Zalo-Arc.png" alt="Zalo">
+            </a>
+            <a href="https://m.me/dulichvn" target="_blank" class="float-btn messenger" title="Chat Messenger">
+                <i class="fab fa-facebook-messenger"></i>
+            </a>
+            <button class="float-btn scroll-top" id="scrollTopBtn" title="Lên đầu trang">
+                <i class="fas fa-chevron-up"></i>
+            </button>
+        </div>
+    </div>
 
     <footer class="footer">
         <div class="container">

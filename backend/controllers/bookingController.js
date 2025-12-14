@@ -1,7 +1,20 @@
 const Booking = require('../models/Booking');
 const emailService = require('../utils/emailService');
 
-const ONLINE_PAYMENT_METHODS = ['bank_card', 'momo', 'apple_pay'];
+// Payment methods that are processed instantly (online)
+const ONLINE_PAYMENT_METHODS = ['bank_card', 'momo', 'zalopay', 'vnpay', 'credit_card'];
+
+// Valid payment methods accepted by the system
+const VALID_PAYMENT_METHODS = [
+    'momo',           // Ví MoMo
+    'zalopay',        // Ví ZaloPay
+    'vnpay',          // Ví VNPay
+    'bank_card',      // Thẻ ATM nội địa
+    'credit_card',    // Thẻ quốc tế Visa/Master
+    'bank_transfer',  // Chuyển khoản ngân hàng
+    'pay_later',      // Thanh toán tại văn phòng
+    'installment'     // Trả góp 0%
+];
 
 const bookingController = {
     /**
@@ -47,6 +60,19 @@ const bookingController = {
                 }
             }
 
+            // Validate payment method
+            const selectedPaymentMethod = payment_method || 'bank_transfer';
+            if (!VALID_PAYMENT_METHODS.includes(selectedPaymentMethod)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid payment method'
+                });
+            }
+
+            // Determine initial payment status based on payment method
+            const isOnlinePayment = ONLINE_PAYMENT_METHODS.includes(selectedPaymentMethod);
+            const initialPaymentStatus = isOnlinePayment ? 'paid' : 'pending';
+
             // Create booking
             const bookingData = {
                 user_id: userId,
@@ -62,7 +88,8 @@ const bookingController = {
                 deposit_amount: 0,
                 discount_amount: 0,
                 final_price: priceInfo.total_price,
-                payment_method: payment_method || 'bank_transfer',
+                payment_method: selectedPaymentMethod,
+                payment_status: initialPaymentStatus,
                 special_requests
             };
 
@@ -161,6 +188,72 @@ const bookingController = {
             res.status(500).json({
                 success: false,
                 message: 'Failed to get booking details',
+                error: error.message
+            });
+        }
+    },
+
+    /**
+     * Public booking lookup (no auth required)
+     * POST /api/bookings/lookup
+     */
+    async publicBookingLookup(req, res) {
+        try {
+            const { booking_reference, contact_info } = req.body;
+
+            if (!booking_reference || !contact_info) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Vui lòng nhập mã booking và email/số điện thoại'
+                });
+            }
+
+            const booking = await Booking.getByReference(booking_reference.toUpperCase());
+
+            if (!booking) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Không tìm thấy đơn đặt tour với mã này'
+                });
+            }
+
+            // Verify contact info matches (email or phone)
+            const contactLower = contact_info.toLowerCase().trim();
+            const emailMatch = booking.contact_email?.toLowerCase() === contactLower;
+            const phoneMatch = booking.contact_phone?.replace(/\s/g, '') === contact_info.replace(/\s/g, '');
+
+            if (!emailMatch && !phoneMatch) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Email hoặc số điện thoại không khớp với đơn đặt tour'
+                });
+            }
+
+            // Return booking with limited info for privacy
+            res.json({
+                success: true,
+                data: {
+                    booking_reference: booking.booking_reference,
+                    tour_title: booking.tour_title,
+                    tour_image: booking.tour_image,
+                    departure_date: booking.departure_date,
+                    num_adults: booking.num_adults,
+                    num_children: booking.num_children,
+                    num_infants: booking.num_infants,
+                    total_price: booking.total_price,
+                    final_price: booking.final_price,
+                    status: booking.status,
+                    payment_status: booking.payment_status,
+                    payment_method: booking.payment_method,
+                    contact_name: booking.contact_name,
+                    created_at: booking.created_at
+                }
+            });
+        } catch (error) {
+            console.error('Public booking lookup error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Không thể tra cứu đơn đặt tour',
                 error: error.message
             });
         }

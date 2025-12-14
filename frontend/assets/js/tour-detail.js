@@ -13,7 +13,22 @@ if (!window.TourBooking) {
     console.error('TourBooking helpers are not available. Please ensure main.js is loaded first.');
 }
 
-const ONLINE_PAYMENT_METHODS = new Set(['bank_card', 'momo', 'apple_pay']);
+// Payment methods that are processed instantly (online payments)
+const ONLINE_PAYMENT_METHODS = new Set([
+    'momo', 'zalopay', 'vnpay', 'bank_card', 'credit_card'
+]);
+
+// Payment method display labels
+const PAYMENT_METHOD_LABELS = {
+    momo: 'Ví MoMo',
+    zalopay: 'Ví ZaloPay',
+    vnpay: 'Ví VNPay',
+    bank_card: 'Thẻ ATM nội địa',
+    credit_card: 'Thẻ Visa/Master',
+    bank_transfer: 'Chuyển khoản ngân hàng',
+    pay_later: 'Thanh toán tại văn phòng',
+    installment: 'Trả góp 0%'
+};
 
 const state = {
     tourId: null,
@@ -333,6 +348,7 @@ async function updatePriceSummary() {
         if (!state.tourId) return;
         const numAdults = Number(getElement('numAdults')?.value || 1);
         const numChildren = Number(getElement('numChildren')?.value || 0);
+        const numInfants = Number(getElement('numInfants')?.value || 0);
         const scheduleId = getElement('departureDate')?.value || null;
 
         const res = await apiRequest('/bookings/calculate-price', {
@@ -342,12 +358,38 @@ async function updatePriceSummary() {
                 schedule_id: scheduleId ? Number(scheduleId) : null,
                 num_adults: numAdults,
                 num_children: numChildren,
-                num_infants: 0
+                num_infants: numInfants
             })
         });
 
         if (res.success) {
             state.pricing = res.data;
+            
+            // Update detailed price breakdown
+            const adultCount = getElement('adultCount');
+            const adultTotal = getElement('adultTotal');
+            const childCount = getElement('childCount');
+            const childTotal = getElement('childTotal');
+            const childPriceRow = getElement('childPriceRow');
+            const infantCount = getElement('infantCount');
+            const infantTotal = getElement('infantTotal');
+            const infantPriceRow = getElement('infantPriceRow');
+            
+            if (adultCount) adultCount.textContent = numAdults;
+            if (adultTotal) adultTotal.textContent = formatPrice(state.pricing.price_adult * numAdults);
+            
+            if (childPriceRow) {
+                childPriceRow.style.display = numChildren > 0 ? 'flex' : 'none';
+                if (childCount) childCount.textContent = numChildren;
+                if (childTotal) childTotal.textContent = formatPrice(state.pricing.price_child * numChildren);
+            }
+            
+            if (infantPriceRow) {
+                infantPriceRow.style.display = numInfants > 0 ? 'flex' : 'none';
+                if (infantCount) infantCount.textContent = numInfants;
+                if (infantTotal) infantTotal.textContent = formatPrice(state.pricing.price_infant * numInfants);
+            }
+            
             setText('totalPrice', formatPrice(res.data.total_price));
         }
     } catch (error) {
@@ -358,11 +400,53 @@ async function updatePriceSummary() {
 function bindBookingActions() {
     const bookButton = getElement('btnBookNow');
     if (bookButton) {
-        bookButton.addEventListener('click', handleBooking);
+        bookButton.addEventListener('click', openPaymentModal);
     }
+    
+    // Initialize payment modal
+    initPaymentModal();
 }
 
-async function handleBooking() {
+// ===== PAYMENT MODAL SYSTEM =====
+let currentPaymentStep = 1;
+
+function initPaymentModal() {
+    const modal = getElement('paymentModal');
+    const closeBtn = getElement('closePaymentModal');
+    const overlay = document.querySelector('.payment-modal-overlay');
+    
+    // Close modal
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closePaymentModal);
+    }
+    if (overlay) {
+        overlay.addEventListener('click', closePaymentModal);
+    }
+    
+    // Step navigation
+    getElement('btnToStep2')?.addEventListener('click', goToPaymentStep2);
+    getElement('btnBackToStep1')?.addEventListener('click', () => setPaymentStep(1));
+    getElement('btnConfirmPayment')?.addEventListener('click', confirmPayment);
+    getElement('btnCloseModal')?.addEventListener('click', closePaymentModal);
+    
+    // Payment method selection
+    document.querySelectorAll('input[name="paymentMethod"]').forEach(input => {
+        input.addEventListener('change', () => {
+            // Visual feedback for selected option
+            document.querySelectorAll('.payment-option-content').forEach(el => {
+                el.style.borderColor = '#e5e7eb';
+                el.style.background = 'transparent';
+            });
+            const selected = input.nextElementSibling;
+            if (selected) {
+                selected.style.borderColor = '#ff6b35';
+                selected.style.background = 'rgba(255, 107, 53, 0.05)';
+            }
+        });
+    });
+}
+
+function openPaymentModal() {
     if (!isLoggedIn()) {
         showToast('Vui lòng đăng nhập để đặt tour', 'error');
         window.location.href = 'login.html';
@@ -375,52 +459,177 @@ async function handleBooking() {
         return;
     }
 
+    // Pre-fill contact info from user data
+    const user = getUserData() || {};
+    getElement('contactName').value = user.full_name || '';
+    getElement('contactEmail').value = user.email || '';
+    getElement('contactPhone').value = user.phone || '';
+    
+    // Update booking summary
     const numAdults = Number(getElement('numAdults')?.value || 1);
     const numChildren = Number(getElement('numChildren')?.value || 0);
-    const paymentMethod = getElement('paymentMethod')?.value || 'bank_card';
-    const user = getUserData() || {};
+    const numInfants = Number(getElement('numInfants')?.value || 0);
+    const departureSelect = getElement('departureDate');
+    const selectedOption = departureSelect?.options[departureSelect.selectedIndex];
+    
+    setText('summaryTourName', state.tourData?.title || '-');
+    setText('summaryDate', selectedOption?.text || '-');
+    setText('summaryGuests', `${numAdults} NL, ${numChildren} TE, ${numInfants} EB`);
+    setText('summaryTotal', getElement('totalPrice')?.textContent || '-');
+    
+    // Reset to step 1 and show modal
+    setPaymentStep(1);
+    const modal = getElement('paymentModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
 
-    if (!user.full_name || !user.email) {
-        showToast('Vui lòng cập nhật hồ sơ trước khi đặt tour', 'error');
+function closePaymentModal() {
+    const modal = getElement('paymentModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+function setPaymentStep(step) {
+    currentPaymentStep = step;
+    
+    // Update step indicators
+    document.querySelectorAll('.payment-steps .step').forEach((el, index) => {
+        el.classList.remove('active', 'completed');
+        if (index + 1 < step) {
+            el.classList.add('completed');
+        } else if (index + 1 === step) {
+            el.classList.add('active');
+        }
+    });
+    
+    // Show/hide step content
+    document.querySelectorAll('.payment-step-content').forEach((el, index) => {
+        el.classList.remove('active');
+        if (index + 1 === step) {
+            el.classList.add('active');
+        }
+    });
+}
+
+function goToPaymentStep2() {
+    // Validate step 1 fields
+    const name = getElement('contactName')?.value.trim();
+    const email = getElement('contactEmail')?.value.trim();
+    const phone = getElement('contactPhone')?.value.trim();
+    
+    if (!name) {
+        showToast('Vui lòng nhập họ và tên', 'error');
+        getElement('contactName')?.focus();
         return;
     }
-
-    const contactPhone = user.phone || prompt('Nhập số điện thoại liên hệ:');
-    if (!contactPhone) {
-        showToast('Cần nhập số điện thoại để đặt tour', 'error');
+    if (!email || !email.includes('@')) {
+        showToast('Vui lòng nhập email hợp lệ', 'error');
+        getElement('contactEmail')?.focus();
         return;
     }
+    if (!phone || phone.length < 9) {
+        showToast('Vui lòng nhập số điện thoại hợp lệ', 'error');
+        getElement('contactPhone')?.focus();
+        return;
+    }
+    
+    setPaymentStep(2);
+}
 
+async function confirmPayment() {
+    // Get selected payment method
+    const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!selectedPayment) {
+        showToast('Vui lòng chọn phương thức thanh toán', 'error');
+        return;
+    }
+    
+    const paymentMethod = selectedPayment.value;
+    const scheduleId = getElement('departureDate')?.value;
+    const numAdults = Number(getElement('numAdults')?.value || 1);
+    const numChildren = Number(getElement('numChildren')?.value || 0);
+    const numInfants = Number(getElement('numInfants')?.value || 0);
+    
+    const payload = {
+        tour_id: Number(state.tourId),
+        schedule_id: Number(scheduleId),
+        num_adults: numAdults,
+        num_children: numChildren,
+        num_infants: numInfants,
+        contact_name: getElement('contactName')?.value.trim(),
+        contact_email: getElement('contactEmail')?.value.trim(),
+        contact_phone: getElement('contactPhone')?.value.trim(),
+        contact_address: getElement('contactAddress')?.value.trim() || '',
+        payment_method: paymentMethod,
+        special_requests: getElement('specialRequests')?.value.trim() || ''
+    };
+    
+    // Disable button during processing
+    const confirmBtn = getElement('btnConfirmPayment');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+    }
+    
     try {
-        const payload = {
-            tour_id: Number(state.tourId),
-            schedule_id: Number(scheduleId),
-            num_adults: numAdults,
-            num_children: numChildren,
-            num_infants: 0,
-            contact_name: user.full_name,
-            contact_email: user.email,
-            contact_phone: contactPhone,
-            payment_method: paymentMethod,
-            special_requests: ''
-        };
-
         const res = await apiRequest('/bookings', {
             method: 'POST',
             body: JSON.stringify(payload)
         });
 
         if (res.success) {
-            const instantPayment = ONLINE_PAYMENT_METHODS.has(paymentMethod);
-            const message = instantPayment
-                ? `Thanh toán thành công! Mã: ${res.data.booking_reference}`
-                : `Đặt tour thành công! Mã: ${res.data.booking_reference}. Vui lòng thanh toán trong 24h.`;
-            showToast(message, 'success');
+            // Update confirmation details
+            setText('confirmBookingRef', res.data.booking_reference);
+            
+            // Update payment method display
+            const paymentLabel = PAYMENT_METHOD_LABELS[paymentMethod] || paymentMethod;
+            const paymentMethodEl = document.getElementById('confirmPaymentMethod');
+            if (paymentMethodEl) {
+                paymentMethodEl.textContent = paymentLabel;
+            }
+            
+            // Update status based on payment method
+            const isInstant = ONLINE_PAYMENT_METHODS.has(paymentMethod);
+            setText('confirmStatus', isInstant ? 'Đã xác nhận' : 'Chờ xác nhận thanh toán');
+            
+            // Update confirmation note based on payment method
+            const noteEl = document.querySelector('.confirmation-note p');
+            if (noteEl) {
+                if (isInstant) {
+                    noteEl.textContent = 'Thanh toán của bạn đã được xử lý thành công. Email xác nhận đã được gửi đến địa chỉ email của bạn.';
+                } else if (paymentMethod === 'bank_transfer') {
+                    noteEl.textContent = 'Vui lòng chuyển khoản trong vòng 24h để hoàn tất đặt tour. Thông tin chuyển khoản đã được gửi đến email của bạn.';
+                } else if (paymentMethod === 'pay_later') {
+                    noteEl.textContent = 'Vui lòng đến văn phòng để thanh toán trước ngày khởi hành. Địa chỉ và thông tin liên hệ đã được gửi đến email của bạn.';
+                } else if (paymentMethod === 'installment') {
+                    noteEl.textContent = 'Nhân viên sẽ liên hệ với bạn trong vòng 24h để hoàn tất thủ tục trả góp.';
+                }
+            }
+            
+            // Go to step 3 (success)
+            setPaymentStep(3);
+            
+            showToast('Đặt tour thành công!', 'success');
         }
     } catch (error) {
-        console.error('handleBooking error:', error);
-        showToast(error.message || 'Không thể đặt tour', 'error');
+        console.error('confirmPayment error:', error);
+        showToast(error.message || 'Không thể đặt tour. Vui lòng thử lại.', 'error');
+    } finally {
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Xác nhận thanh toán';
+        }
     }
+}
+
+// Legacy handleBooking function (kept for compatibility)
+async function handleBooking() {
+    openPaymentModal();
 }
 
 // ===== REVIEW SYSTEM =====
@@ -611,5 +820,53 @@ function generateStars(rating) {
 document.addEventListener('DOMContentLoaded', () => {
     initTourDetailPage();
     initReviewModal();
+    initSocialProof();
+    initFloatingButtons();
 });
+
+// ===== SOCIAL PROOF & URGENCY =====
+function initSocialProof() {
+    // Simulate random booking stats (would come from backend in production)
+    const bookingsToday = Math.floor(Math.random() * 15) + 5;
+    const viewsNow = Math.floor(Math.random() * 30) + 20;
+    const seatsLeft = Math.floor(Math.random() * 8) + 2;
+    
+    const bookingsTodayEl = getElement('bookingsToday');
+    const viewsNowEl = getElement('viewsNow');
+    const seatsLeftEl = getElement('seatsLeft');
+    
+    if (bookingsTodayEl) bookingsTodayEl.textContent = bookingsToday;
+    if (viewsNowEl) viewsNowEl.textContent = viewsNow;
+    if (seatsLeftEl) seatsLeftEl.textContent = seatsLeft;
+    
+    // Simulate live views (update every 30 seconds)
+    setInterval(() => {
+        const newViews = Math.floor(Math.random() * 10) + 40;
+        if (viewsNowEl) viewsNowEl.textContent = newViews;
+    }, 30000);
+}
+
+// ===== FLOATING BUTTONS =====
+function initFloatingButtons() {
+    const scrollTopBtn = getElement('scrollTopBtn');
+    
+    if (scrollTopBtn) {
+        // Show/hide scroll to top button based on scroll position
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 400) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+        
+        // Scroll to top when clicked
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+}
 })();

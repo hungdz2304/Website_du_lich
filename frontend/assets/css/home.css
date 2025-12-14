@@ -45,12 +45,234 @@
     opacity: 0.95;
 }
 
+/* Stats Bar (iVivu Style) */
+.stats-bar {
+    background: #fff;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 10;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: #fff;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.stat-item i {
+    font-size: 32px;
+    color: var(--primary-color);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--dark-color);
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #666;
+}
+
+/* Flash Sale Section */
+.flash-sale-section {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    padding: 40px 0;
+}
+
+.flash-sale-section .section-title,
+.flash-sale-section .section-subtitle {
+    color: #fff;
+}
+
+.flash-sale-section .section-header {
+    margin-bottom: 30px;
+}
+
+.section-title-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+    margin: 0;
+}
+
+/* Countdown Timer */
+.countdown-timer {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(0,0,0,0.2);
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+.countdown-label {
+    color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.countdown-boxes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.countdown-box {
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 50px;
+}
+
+.countdown-value {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
+.countdown-unit {
+    font-size: 10px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.countdown-separator {
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.flash-sale-section .btn-view-all {
+    background: #fff;
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.flash-sale-section .btn-view-all:hover {
+    background: #f0f0f0;
+}
+
+/* Tour Card với Social Proof Badge */
+.tour-card {
+    position: relative;
+}
+
+.social-proof-badge {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 2;
+}
+
+.social-proof-badge i {
+    color: #ffc107;
+}
+
+/* Horizontal Scroll Tours Grid */
+.tours-grid-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 15px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tours-grid-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.tours-grid-scroll::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+}
+
+.tours-grid-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.6);
+    border-radius: 3px;
+}
+
+.tours-grid-scroll .tour-card {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+}
+
+/* Asia Tours Section */
+.asia-tours-section {
+    background: #f0f7ff;
+}
+
+.asia-tours-section .section-title i {
+    color: #e91e63;
+}
+
+/* Europe Tours Section */
+.europe-tours-section {
+    background: #fff5f0;
+}
+
+.europe-tours-section .section-title i {
+    color: #3f51b5;
+}
+
+/* Central Tours Section */
+.central-tours-section {
+    background: #f0fff7;
+}
+
+.central-tours-section .section-title i {
+    color: #00bcd4;
+}
+
 /* Search Box (iVivu Style) */
 .search-box {
     background: #fff;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     overflow: hidden;
 }
@@ -88,8 +310,8 @@
 
 .search-inputs {
     display: grid;
-    grid-template-columns: 2fr 1.5fr auto;
-    gap: 15px;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr auto;
+    gap: 12px;
     align-items: center;
 }
 
@@ -103,17 +325,19 @@
     position: absolute;
     left: 15px;
     color: #999;
-    font-size: 18px;
+    font-size: 16px;
+    z-index: 1;
 }
 
 .search-input,
 .search-select {
     width: 100%;
-    padding: 15px 15px 15px 45px;
+    padding: 14px 14px 14px 42px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: 14px;
     transition: all 0.3s ease;
+    background: #fff;
 }
 
 .search-input:focus,
@@ -125,6 +349,25 @@
 
 .search-input::placeholder {
     color: #999;
+}
+
+.search-input.datepicker {
+    cursor: pointer;
+}
+
+.date-clear {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #999;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 5px;
+    z-index: 2;
+}
+
+.date-clear:hover {
+    color: var(--primary-color);
 }
 
 .btn-search {
@@ -449,6 +692,12 @@
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 992px) {
     .hero-title {
         font-size: 36px;
@@ -468,6 +717,17 @@
     
     .features-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .section-header {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .countdown-timer {
+        order: 3;
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -490,8 +750,463 @@
         grid-template-columns: 1fr;
     }
     
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
     .btn-search {
         width: 100%;
         justify-content: center;
+    }
+    
+    .countdown-boxes {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .section-title-group {
+        text-align: center;
+        width: 100%;
+    }
+}
+
+/* ===========================================
+   TOUR CATEGORIES SECTION (iVivu Style)
+   =========================================== */
+
+.tour-categories-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px 0;
+}
+
+.tour-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.category-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+}
+
+.category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover::before {
+    transform: scaleX(1);
+}
+
+.category-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 28px;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-icon {
+    transform: scale(1.1);
+}
+
+.category-icon.beach {
+    background: linear-gradient(135deg, #00bcd4 0%, #03a9f4 100%);
+}
+
+.category-icon.mountain {
+    background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+}
+
+.category-icon.culture {
+    background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+}
+
+.category-icon.cruise {
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
+}
+
+.category-icon.honeymoon {
+    background: linear-gradient(135deg, #e91e63 0%, #f06292 100%);
+}
+
+.category-icon.family {
+    background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%);
+}
+
+.category-icon.adventure {
+    background: linear-gradient(135deg, #607d8b 0%, #455a64 100%);
+}
+
+.category-content h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.category-content p {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.category-count {
+    font-size: 12px;
+    color: var(--primary-color);
+    font-weight: 600;
+    padding: 4px 12px;
+    background: rgba(255, 107, 53, 0.1);
+    border-radius: 20px;
+}
+
+.category-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.category-badge.hot {
+    background: #ff5252;
+    color: #fff;
+}
+
+.category-badge.new {
+    background: #4caf50;
+    color: #fff;
+}
+
+/* ===========================================
+   REGIONAL TOURS SECTION
+   =========================================== */
+
+.regional-tours-section {
+    background: #fff;
+    padding: 60px 0;
+}
+
+.regional-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.regional-tab {
+    padding: 12px 25px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.regional-tab:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.regional-tab.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+.regional-tab i {
+    font-size: 16px;
+}
+
+.btn-view-all-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 30px;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-view-all-outline:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* ===========================================
+   FLOATING CONTACT BUTTONS (iVivu Style)
+   =========================================== */
+
+.floating-contacts {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.floating-hotline {
+    margin-bottom: 10px;
+}
+
+.hotline-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    animation: pulse-hotline 2s infinite;
+    transition: all 0.3s ease;
+}
+
+.hotline-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+}
+
+.hotline-btn i {
+    font-size: 18px;
+    animation: shake 0.5s infinite;
+}
+
+@keyframes pulse-hotline {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 25px rgba(255, 107, 53, 0.6);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+.floating-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.float-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.float-btn:hover {
+    transform: scale(1.1);
+}
+
+.float-btn.zalo {
+    background: #fff;
+}
+
+.float-btn.zalo img {
+    width: 32px;
+    height: 32px;
+}
+
+.float-btn.messenger {
+    background: linear-gradient(135deg, #00c6ff 0%, #0078ff 100%);
+    color: #fff;
+    font-size: 24px;
+}
+
+.float-btn.scroll-top {
+    background: #333;
+    color: #fff;
+    font-size: 18px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.float-btn.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ===========================================
+   ENHANCED DESTINATIONS SECTION
+   =========================================== */
+
+.destinations-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.destination-card {
+    position: relative;
+    height: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.destination-card:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+    height: 100%;
+}
+
+.destination-tour-count {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255,255,255,0.95);
+    color: var(--primary-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    z-index: 2;
+}
+
+/* ===========================================
+   RESPONSIVE FOR NEW SECTIONS
+   =========================================== */
+
+@media (max-width: 1200px) {
+    .tour-categories-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .destinations-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .destination-card:first-child {
+        grid-column: span 1;
+        grid-row: span 1;
+        height: 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .search-inputs {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .search-inputs .btn-search {
+        grid-column: span 2;
+    }
+    
+    .tour-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .destinations-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .search-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-inputs .btn-search {
+        grid-column: span 1;
+    }
+    
+    .tour-categories-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .category-card {
+        padding: 20px 15px;
+    }
+    
+    .category-icon {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+    
+    .regional-tabs {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding-bottom: 10px;
+    }
+    
+    .regional-tab {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .floating-hotline {
+        display: none;
+    }
+    
+    .floating-contacts {
+        right: 15px;
+        bottom: 15px;
+    }
+    
+    .destinations-grid {
+        grid-template-columns: 1fr;
     }
 }

@@ -123,6 +123,16 @@ const tourQueryValidation = [
         .optional()
         .isFloat({ min: 0 })
         .withMessage('Maximum price must be a positive number'),
+    query('country')
+        .optional()
+        .isString()
+        .trim()
+        .isLength({ max: 100 })
+        .withMessage('Country filter is invalid'),
+    query('scope')
+        .optional()
+        .isIn(['domestic', 'international'])
+        .withMessage('Scope must be domestic or international'),
     query('sort_by')
         .optional()
         .isIn([
