@@ -296,6 +296,26 @@ CREATE TABLE favorites (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================
+-- Table: custom_components
+-- Building blocks for custom tours
+-- ============================================
+CREATE TABLE custom_components (
+    component_id INT AUTO_INCREMENT PRIMARY KEY,
+    destination_id INT NULL,
+    type ENUM('hotel', 'transport', 'activity', 'meal') NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    price_per_person DECIMAL(10, 2) DEFAULT NULL,
+    price_per_day DECIMAL(10, 2) DEFAULT NULL,
+    star_rating INT DEFAULT NULL,
+    is_optional BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_destination (destination_id),
+    INDEX idx_type (type),
+    INDEX idx_star (star_rating),
+    FOREIGN KEY (destination_id) REFERENCES destinations(destination_id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================
 -- Triggers to update tour statistics
 -- ============================================
 

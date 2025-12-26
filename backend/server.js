@@ -14,6 +14,7 @@ const destinationRoutes = require('./routes/destinationRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const customTourRoutes = require('./routes/customTourRoutes');
 
 // Initialize Express app
 const app = express();
@@ -34,6 +35,7 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/custom-tours', customTourRoutes);
 
 // Serve uploaded files
 app.use('/uploads', express.static('uploads'));

@@ -389,3 +389,53 @@ INSERT INTO reviews (tour_id, user_id, rating, title, comment, rating_service, r
 -- ============================================
 -- End of Sample Data
 -- ============================================
+
+-- ============================================
+-- Custom tour components (for budget builder)
+-- ============================================
+INSERT INTO custom_components (destination_id, type, name, price_per_person, price_per_day, star_rating, is_optional) VALUES
+-- Phú Quốc (1)
+(1, 'hotel', 'Khách sạn 3 sao Phú Quốc', NULL, 700000, 3, FALSE),
+(1, 'hotel', 'Resort 5 sao Phú Quốc', NULL, 1800000, 5, FALSE),
+(1, 'transport', 'Vé máy bay khứ hồi', 1500000, NULL, NULL, FALSE),
+(1, 'activity', 'VinWonders + Safari', 900000, NULL, NULL, TRUE),
+(1, 'meal', 'Set ăn hải sản', 250000, NULL, NULL, TRUE),
+
+-- Đà Lạt (2)
+(2, 'hotel', 'Khách sạn 3 sao Đà Lạt', NULL, 500000, 3, FALSE),
+(2, 'hotel', 'Khách sạn 4 sao Đà Lạt', NULL, 900000, 4, FALSE),
+(2, 'transport', 'Xe du lịch từ TP.HCM', 600000, NULL, NULL, FALSE),
+(2, 'activity', 'Vé tham quan Datanla', 200000, NULL, NULL, TRUE),
+(2, 'meal', 'Buffet lẩu gà lá é', 180000, NULL, NULL, TRUE),
+
+-- Nha Trang (3)
+(3, 'hotel', 'Khách sạn 3 sao Nha Trang', NULL, 650000, 3, FALSE),
+(3, 'hotel', 'Khách sạn 5 sao Nha Trang', NULL, 1600000, 5, FALSE),
+(3, 'transport', 'Vé máy bay khứ hồi', 1400000, NULL, NULL, FALSE),
+(3, 'activity', 'Tour 4 đảo', 600000, NULL, NULL, TRUE),
+(3, 'meal', 'Buffet hải sản', 300000, NULL, NULL, TRUE),
+
+-- Hạ Long (4)
+(4, 'hotel', 'Khách sạn 4 sao Hạ Long', NULL, 1100000, 4, FALSE),
+(4, 'hotel', 'Du thuyền 5 sao Hạ Long', NULL, 2500000, 5, FALSE),
+(4, 'transport', 'Xe limousine từ Hà Nội', 500000, NULL, NULL, FALSE),
+(4, 'activity', 'Vé tham quan vịnh', 350000, NULL, NULL, TRUE),
+(4, 'meal', 'Set hải sản trên tàu', 320000, NULL, NULL, TRUE),
+
+-- Sapa (5)
+(5, 'hotel', 'Khách sạn 3 sao Sapa', NULL, 600000, 3, FALSE),
+(5, 'hotel', 'Khách sạn 4 sao Sapa', NULL, 950000, 4, FALSE),
+(5, 'transport', 'Xe giường nằm từ Hà Nội', 450000, NULL, NULL, FALSE),
+(5, 'activity', 'Vé cáp treo Fansipan', 700000, NULL, NULL, TRUE),
+(5, 'meal', 'Set đặc sản Sapa', 220000, NULL, NULL, TRUE),
+
+-- Hội An (6)
+(6, 'hotel', 'Khách sạn 3 sao Hội An', NULL, 750000, 3, FALSE),
+(6, 'hotel', 'Khách sạn 5 sao Hội An', NULL, 1700000, 5, FALSE),
+(6, 'transport', 'Vé máy bay khứ hồi', 1500000, NULL, NULL, FALSE),
+(6, 'activity', 'Vé tham quan phố cổ', 150000, NULL, NULL, TRUE),
+(6, 'meal', 'Combo ẩm thực Hội An', 200000, NULL, NULL, TRUE),
+
+-- Global components (destination_id NULL)
+(NULL, 'transport', 'Bảo hiểm du lịch cơ bản', 80000, NULL, NULL, TRUE),
+(NULL, 'meal', 'Nước uống & snack', 50000, NULL, NULL, TRUE);

@@ -336,6 +336,7 @@ async function loadSearchDestinations() {
         if (response.success) {
             allDestinations = response.data || [];
             renderDestinationOptions();
+            renderCustomDestinationOptions();
         }
     } catch (error) {
         console.error('Error loading search destinations:', error);
@@ -360,6 +361,133 @@ function renderDestinationOptions() {
         option.value = dest.destination_id;
         option.textContent = dest.name;
         select.appendChild(option);
+    });
+}
+
+function renderCustomDestinationOptions() {
+    const select = document.getElementById('customDestinations');
+    if (!select) return;
+
+    const selected = new Set(Array.from(select.selectedOptions || []).map(option => option.value));
+    select.innerHTML = '';
+
+    allDestinations.forEach(dest => {
+        const option = document.createElement('option');
+        option.value = dest.destination_id;
+        option.textContent = dest.name;
+        if (selected.has(String(dest.destination_id))) {
+            option.selected = true;
+        }
+        select.appendChild(option);
+    });
+}
+
+function getDestinationNameById(id) {
+    const match = allDestinations.find(dest => Number(dest.destination_id) === Number(id));
+    return match ? match.name : `ID ${id}`;
+}
+
+function formatPlanLabel(plan) {
+    if (plan === 'budget') return 'Ưu tiên ngân sách';
+    if (plan === 'balanced') return 'Cân bằng';
+    if (plan === 'premium') return 'Trải nghiệm';
+    return plan;
+}
+
+function renderCustomPlans(plans = [], summary = {}) {
+    const result = document.getElementById('customTourResult');
+    if (!result) return;
+
+    if (!plans.length) {
+        result.innerHTML = '<p class="muted">Không có phương án phù hợp.</p>';
+        return;
+    }
+
+    const html = plans.map(plan => {
+        const isFeasible = Boolean(plan.within_budget);
+        const status = isFeasible
+            ? 'Trong ngân sách'
+            : 'Không khả thi trong ngân sách';
+        const breakdownList = (plan.breakdown || []).map(entry => {
+            const items = (entry.items || []).map(item => `${item.name} (${formatPrice(item.cost || 0)})`);
+            return `<li>${getDestinationNameById(entry.destination_id)} - ${entry.days || 0} ngày: ${items.join(', ') || 'Không có mục'}</li>`;
+        }).join('');
+
+        const removed = (plan.removed_optional || []).map(item => `${item.name} (${formatPrice(item.cost || 0)})`);
+
+        return `
+            <div class="plan-card">
+                <div class="plan-header">
+                    <span>${formatPlanLabel(plan.plan)}</span>
+                    <span class="plan-cost">${isFeasible ? formatPrice(plan.total_cost || 0) : '—'}</span>
+                </div>
+                <div class="plan-meta">${status}</div>
+                ${summary.people ? `<div class="plan-meta">Số người: ${summary.people}, Số ngày: ${summary.days}</div>` : ''}
+                ${isFeasible ? `<ul class="plan-list">${breakdownList || '<li>Không có chi tiết.</li>'}</ul>` : '<div class="plan-meta">Gợi ý: giảm số ngày, số người hoặc tăng ngân sách.</div>'}
+                ${isFeasible && removed.length ? `<div class="plan-meta">Đã loại bỏ: ${removed.join(', ')}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+
+    result.innerHTML = html;
+}
+
+function setCustomTourLoading(isLoading) {
+    const loader = document.getElementById('customTourLoading');
+    const result = document.getElementById('customTourResult');
+    if (loader) loader.style.display = isLoading ? 'flex' : 'none';
+    if (result) result.style.opacity = isLoading ? '0.4' : '1';
+}
+
+function setupCustomTourForm() {
+    const form = document.getElementById('customTourForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const budgetValue = Number(document.getElementById('customBudget')?.value || 0);
+        const peopleValue = Number(document.getElementById('customPeople')?.value || 1);
+        const daysValue = Number(document.getElementById('customDays')?.value || 1);
+        const hotelStarValue = document.getElementById('customHotelStar')?.value || '';
+        const preferenceValue = document.getElementById('customPreference')?.value || 'budget';
+        const destinationSelect = document.getElementById('customDestinations');
+        const destinationIds = destinationSelect ? Array.from(destinationSelect.selectedOptions).map(option => Number(option.value)) : [];
+
+        if (!budgetValue || destinationIds.length === 0) {
+            showToast('Vui lòng nhập ngân sách và chọn điểm đến.', 'error');
+            return;
+        }
+
+        const payload = {
+            budget: budgetValue,
+            people: Math.max(1, peopleValue || 1),
+            days: Math.max(1, daysValue || 1),
+            destination_ids: destinationIds,
+            hotel_star: hotelStarValue ? Number(hotelStarValue) : null,
+            preference: preferenceValue
+        };
+
+        try {
+            setCustomTourLoading(true);
+            const response = await apiRequest('/custom-tours/estimate', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (response.success) {
+                renderCustomPlans(response.data?.plans || [], response.data || {});
+            } else {
+                renderCustomPlans([]);
+                showToast(response.message || 'Không thể tạo tour.', 'error');
+            }
+        } catch (error) {
+            console.error('Custom tour error:', error);
+            renderCustomPlans([]);
+            showToast('Không thể tạo tour.', 'error');
+        } finally {
+            setCustomTourLoading(false);
+        }
     });
 }
 
@@ -583,6 +711,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDestinations();
     loadSearchDestinations();
     loadRegionalTours();
+    setupCustomTourForm();
     
     // Handle search form
     handleSearchForm();

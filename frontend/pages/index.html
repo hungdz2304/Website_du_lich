@@ -230,6 +230,70 @@
         </div>
     </section>
 
+    <!-- Custom Tour Builder -->
+    <section class="section custom-tour-section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-title-group">
+                    <h2 class="section-title">
+                        <i class="fas fa-sliders-h"></i>
+                        T&#7921; t&#7841;o tour theo nhu c&#7847;u
+                    </h2>
+                    <p class="section-subtitle">Ch&#7885;n &#273;i&#7875;m &#273;&#7871;n, ng&#226;n s&#225;ch v&#224; nhu c&#7847;u &#273;&#7875; h&#7879; th&#7889;ng g&#7907;i &#253;</p>
+                </div>
+            </div>
+
+            <div class="custom-tour-grid">
+                <form id="customTourForm" class="custom-tour-form">
+                    <div class="form-row">
+                        <label for="customBudget">Ng&#226;n s&#225;ch (VND)</label>
+                        <input type="number" id="customBudget" min="0" step="1000" placeholder="5000000" required>
+                    </div>
+                    <div class="form-row">
+                        <label for="customPeople">S&#7889; ng&#432;&#7901;i</label>
+                        <input type="number" id="customPeople" min="1" value="1">
+                    </div>
+                    <div class="form-row">
+                        <label for="customDays">S&#7889; ng&#224;y</label>
+                        <input type="number" id="customDays" min="1" value="1">
+                    </div>
+                    <div class="form-row">
+                        <label for="customHotelStar">H&#7841;ng kh&#225;ch s&#7841;n</label>
+                        <select id="customHotelStar">
+                            <option value="">B&#7845;t k&#7923;</option>
+                            <option value="3">3 sao</option>
+                            <option value="4">4 sao</option>
+                            <option value="5">5 sao</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label for="customPreference">&#431;u ti&#234;n</label>
+                        <select id="customPreference">
+                            <option value="budget">&#431;u ti&#234;n ng&#226;n s&#225;ch</option>
+                            <option value="balanced">C&#226;n b&#7857;ng</option>
+                            <option value="premium">Tr&#7843;i nghi&#7879;m</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label for="customDestinations">Ch&#7885;n &#273;i&#7875;m &#273;&#7871;n (nhi&#7873;u)</label>
+                        <select id="customDestinations" multiple></select>
+                        <small class="hint">Gi&#7919; Ctrl (Windows) &#273;&#7875; ch&#7885;n nhi&#7873;u &#273;i&#7875;m &#273;&#7871;n</small>
+                    </div>
+                    <button type="submit" class="btn-primary btn-build-tour">T&#7841;o tour theo ng&#226;n s&#225;ch</button>
+                </form>
+
+                <div class="custom-tour-result">
+                    <div id="customTourLoading" class="loading" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> &#272;ang t&#237;nh to&#225;n...
+                    </div>
+                    <div id="customTourResult" class="custom-tour-plans">
+                        <p class="muted">Nh&#7853;p th&#244;ng tin &#273;&#7875; h&#7879; th&#7889;ng &#273;&#7873; xu&#7845;t ph&#432;&#417;ng &#225;n.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Featured Tours Section -->
     <section class="section featured-tours">
         <div class="container">
